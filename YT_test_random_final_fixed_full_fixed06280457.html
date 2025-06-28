@@ -395,7 +395,6 @@
     let videoIds = [];
     let ytPlayer;
     let currentIndex = 0;
-    let autoPlayPending = false;
     let lastPlayerState = null;
    
     //
@@ -820,6 +819,7 @@ function renderIconBar() {
         currentIndex = entryIndex;
         // load and play the exact video
         ytPlayer.loadVideoById(videoId);
+        ytPlayer.playVideo();
         document.getElementById("playerOverlay").style.display = "none";
         document.getElementById("playerOverlay").style.opacity = "0";
         updateFishInfo(fish);
@@ -836,15 +836,6 @@ let lastState = null;
  */
 function onPlayerStateChange(event) {
   const overlay = document.getElementById("playerOverlay");
-
-  // ── 変更点①: CUED 状態で autoPlayPending が立っていれば再生をトリガー ──
-  if (event.data === YT.PlayerState.CUED && autoPlayPending) {
-    autoPlayPending = false;
-    console.log('autoPlayPending CUED→PLAY');
-    ytPlayer.playVideo();
-    ytPlayer.unMute();  // 必要に応じてアンミュート
-    return;
-  }
 
   // ── 通常ステートハンドリング ──
   switch (event.data) {
@@ -909,7 +900,7 @@ function nextVideo() {
     currentIndex++;
     const entry = videoIds[currentIndex];
     console.log('[nextVideo] playing entry', entry);
-    // ▶️ 一括で再生＋UI更新を行う
+    // ▶️ load→play フローに委譲
     playVideoByFish(entry.fishId, entry.videoId);
 
     //ytPlayer.loadVideoById(entry.videoId);
@@ -969,29 +960,27 @@ function prevVideo() {
       // 3) アイコンバーを再描画
         renderIconBar();
 
-      // 4) 先頭動画をセット（cue のみ）
+      // 4) 先頭動画を load→play もしくは cue
         if (videoIds.length > 0) {
           const entry = videoIds[0];
           const fish  = fishes.find(f => f.FishID === entry.fishId);
           const video = videos.find(v =>
             v.FishID === entry.fishId &&
-             extractVideoId(v.YouTubeURL) === entry.videoId
+            extractVideoId(v.YouTubeURL) === entry.videoId
           );
           updateFishInfo(fish);
           updateVideoMeta(video);
-          ytPlayer.cueVideoById(entry.videoId);
-          console.log(`[nextGroup] cued videoId=${entry.videoId}`);
-         } else {
+          if (play) {
+            // 連続再生ON 時は即ロード＆再生
+            ytPlayer.loadVideoById(entry.videoId);
+            ytPlayer.playVideo();
+          } else {
+            // OFF 時は動画のみセット（再生は待機）
+            ytPlayer.cueVideoById(entry.videoId);
+         }
+        } else {
           console.warn('nextGroup: 動画がありません group=', currentGroupId);
           return;
-        }
-
-      // 5) play=true ならロード＆再生
-        if (play) {
-          console.log('[nextGroup] now playing');
-          const entry = videoIds[0];
-          playVideoByFish(entry.fishId, entry.videoId);
-          console.log('[nextGroup] invoking playVideoByFish');
         }
       } catch (err) {
         console.error("nextGroup fetch error:", err);
