@@ -473,6 +473,7 @@ let currentLetter = "";
        
       // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
       renderIconBar();
+      console.log('videoIds:', videoIds);
       // トグル初期化はここで
       const toggle = document.getElementById("repeatToggle");
       repeatMode = toggle.checked;
@@ -497,7 +498,7 @@ let currentLetter = "";
        // ———— 動画を再生せずセットだけしておく ————
         ytPlayer.cueVideoById(extractVideoId(firstVideo.YouTubeURL));
       // 必要に応じて自動再生したい場合は以下をアンコメント
-      // playVideoByFish(firstFishId);
+      // playVideoByFish(entry.fishId, entry.videoId);
       
       }
   }
@@ -684,15 +685,24 @@ function setupKanaButtons(fishes) {
 
     function onPlaceChange(e) {
       const place = e.target.value;
-      // アイコンバーの魚アイコンを灰色 or カラー切り替え
-      document.querySelectorAll('.fish-icon').forEach(div=>{
-        const fid = div.querySelector('img').onclick && div.querySelector('img').onclick.toString().match(/playVideoByFish\((\d+)\)/)[1];
-        const fish = videos.find(v=>v.FishID==fid);
-        const hasAtPlace = (fish?.Videos||[]).some(v=>v.撮影場所===place);
-        div.querySelector('img').src = hasAtPlace ? fish.IconURL : fish.IconInactiveURL;
-      });
-    }
+      document.querySelectorAll('.fish-icon').forEach(img => {
+        // ① data-fish-id 属性から ID を取得
+        const fid = Number(img.dataset.fishId);
 
+        // ② その魚の動画リストの中に該当場所があるか調べる
+        const hasAtPlace = videos.some(v =>
+          v.FishID === fid && v.撮影場所 === place
+        );
+
+        // ③ fishes マスタを参照してカラー／グレイを切り替え
+        const fishMeta = fishes.find(f => f.FishID === fid);
+        if (fishMeta) {
+          img.src = hasAtPlace
+            ? fishMeta.IconURL
+            : fishMeta.IconInactiveURL;
+        }
+      });
+    }    
 
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player("player", {
@@ -795,6 +805,7 @@ function renderIconBar() {
     }
 
     function playVideoByFish(fishId, videoId) {
+      console.log('[playVideoByFish] called with', { fishId, videoId });
       const fish = fishes.find(f => f.FishID === fishId);
        // find the specific video record
       const video = videos.find(v =>
@@ -838,10 +849,13 @@ function onPlayerStateChange(event) {
   // ── 通常ステートハンドリング ──
   switch (event.data) {
     case YT.PlayerState.ENDED:
-      console.log(
-        '[onPlayerStateChange] ENDED fired',
-        { repeatMode, currentIndex, total: videoIds.length }
-      );
+    
+    console.log(
+      '[onPlayerStateChange] ENDED fired',
+      'repeatMode=', repeatMode,
+      'currentIndex=', currentIndex,
+      'totalVideos=', videoIds.length
+    );
     
       // 再生終了時の連続再生処理
       if (repeatMode) {
@@ -889,12 +903,14 @@ function pauseVideo() { ytPlayer.pauseVideo(); }
 function stopVideo() { ytPlayer.stopVideo(); }
 
 function nextVideo() {
+  console.log('[nextVideo] before increment', { currentIndex, total: videoIds.length });
   if (currentIndex < videoIds.length - 1) {
     // 同グループ内の次動画へ
     currentIndex++;
     const entry = videoIds[currentIndex];
+    console.log('[nextVideo] playing entry', entry);
     // ▶️ 一括で再生＋UI更新を行う
-    playVideoByFish(entry.fishId);
+    playVideoByFish(entry.fishId, entry.videoId);
 
     //ytPlayer.loadVideoById(entry.videoId);
     //
@@ -917,7 +933,7 @@ function prevVideo() {
     currentIndex--;
     const entry = videoIds[currentIndex];
     // ▶️ 一括で再生＋UI更新を行う
-    playVideoByFish(entry.fishId);
+    playVideoByFish(entry.fishId, entry.videoId);
 
     //ytPlayer.loadVideoById(entry.videoId);
     //
@@ -935,52 +951,48 @@ function prevVideo() {
 }
 
     async function nextGroup(play = false) {
+      console.log(`[nextGroup] called with play=${play}, fromGroup=${currentGroupId}`);
       // 1) グループIDをインクリメント（最大を超えたら 1 に戻す）
       currentGroupId = currentGroupId < MAX_GROUP ? currentGroupId + 1 : 1;
-      // 2) 新しいグループの動画一覧を取得
+      console.log(`[nextGroup] fetching group=${currentGroupId}, play=${play}`);
+      // 2) 新グループの動画を取得し、videoIds を再生成
       try {
-         videos = await fetch(
+        videos = await fetch(
           `${BASE_API_URL}?action=listVideosByGroup&groupId=${currentGroupId}`
         ).then(res => res.json());
-
-      // ★ videoIds を最新化
-       videoIds = videos.map(v => ({
-          fishId:  v.FishID,
-          videoId: extractVideoId(v.YouTubeURL)
-       }));
+         videoIds = videos.map(v => ({
+           fishId:  v.FishID,
+           videoId: extractVideoId(v.YouTubeURL)
+        }));
+         console.log('[nextGroup] videoIds:', videoIds);
 
       // 3) アイコンバーを再描画
         renderIconBar();
-      
-      // ★ 先頭動画を必ずセット＆UI更新（再生はしない）
+
+      // 4) 先頭動画をセット（cue のみ）
         if (videoIds.length > 0) {
           const entry = videoIds[0];
-          // cue only
-          ytPlayer.cueVideoById(entry.videoId);
-      // fish/video 情報を更新
-          const fish = fishes.find(f => f.FishID === entry.fishId);
+          const fish  = fishes.find(f => f.FishID === entry.fishId);
           const video = videos.find(v =>
             v.FishID === entry.fishId &&
-            extractVideoId(v.YouTubeURL) === entry.videoId
-           );
+             extractVideoId(v.YouTubeURL) === entry.videoId
+          );
           updateFishInfo(fish);
           updateVideoMeta(video);
-        } else {
+          ytPlayer.cueVideoById(entry.videoId);
+          console.log(`[nextGroup] cued videoId=${entry.videoId}`);
+         } else {
           console.warn('nextGroup: 動画がありません group=', currentGroupId);
+          return;
         }
 
-        // 4) play=true なら再生ボタンと同じ挙動
-      if (play) {
-        if (!videos.length) {
-          // 動画がなければアラームのみ
-          beep();
-          alert('再生可能な動画がありません');
-        } else {
-         // cue 済みの先頭動画を再生
-          ytPlayer.playVideo();
-          //playVideo();
+      // 5) play=true ならロード＆再生
+        if (play) {
+          console.log('[nextGroup] now playing');
+          const entry = videoIds[0];
+          playVideoByFish(entry.fishId, entry.videoId);
+          console.log('[nextGroup] invoking playVideoByFish');
         }
-      }
       } catch (err) {
         console.error("nextGroup fetch error:", err);
       }
@@ -1018,7 +1030,7 @@ async function prevGroup(play = false) {
         } else {
           console.warn('prevGroup: 動画がありません group=', currentGroupId);
         }
-
+ 
     // 4) play=true なら再生
     if (play) {
       if (!videos.length) {
@@ -1029,10 +1041,12 @@ async function prevGroup(play = false) {
         ytPlayer.playVideo();
       }
     }
-  } catch (err) {
-    console.error("prevGroup fetch error:", err);
-  }
-}
+      } catch (err) {
+        console.error("prevGroup fetch error:", err);
+      }
+    }
+
+
 
 
 </script>
