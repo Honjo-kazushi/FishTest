@@ -463,6 +463,7 @@ function setupKanaButtons(fishes) {
     .forEach(btn => {
       btn.addEventListener('click', () => {
         const kana = btn.dataset.kana;       // 例: "あ" or "わ" or "全"
+        currentLetter = (kana === "全" ? "" : kana);
         // 「全」なら全件表示
         if (kana === "全") {
           populateFishSelect(fishes);
@@ -562,14 +563,37 @@ function setupKanaButtons(fishes) {
 
     function populateFishSelect(list) {
       const sel = document.getElementById('fishSelect');
-      sel.innerHTML = '<option value="">魚を選択</option>';
+      sel.innerHTML = '';
+      //sel.innerHTML = '<option value="">魚を選択</option>';
       list.sort((a, b) => a.Name.localeCompare(b.Name, 'ja'));
+      
+        // 先頭にダミーオプション（必要なら）
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = '— 魚を選択 —';
+      sel.appendChild(placeholder);
+      
       list.forEach(f => {
         const opt = document.createElement('option');
         opt.value = f.FishID;
         opt.textContent = f.Name;
         sel.appendChild(opt);
       });
+    
+      // フィルタ文字があるとき（＝あ〜わボタン押下時）のみ自動オープン
+      if (currentLetter) {
+        sel.focus();
+        const MAX_VISIBLE_ROWS = 8;
+        sel.size = Math.min(list.length, MAX_VISIBLE_ROWS) || 1;
+
+        const restore = () => {
+          sel.removeAttribute('size');
+          sel.removeEventListener('change', restore);
+          sel.removeEventListener('blur', restore);
+        };
+        sel.addEventListener('change', restore);
+        sel.addEventListener('blur', restore);
+      }
     }
 
     function onGroupChange(e) {
