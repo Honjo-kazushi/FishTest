@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fish Viewer - ランダム版</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #eef6fb;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
+    .left-panel, .right-panel {
+      box-sizing: border-box;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .left-panel {
+      flex: 1 1 300px;
+      max-width: 600px;  /* または max-width: none; */
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-panel {
+      flex: 0 0 640px;
+      max-width: 640px;
+      overflow: hidden;
+    }
+    .fish-feature {
+      margin-top: 1rem;
+    }
+    .feature-text {
+      max-width: 100%;
+      white-space: pre-wrap; /* 改行を保持して折り返す */
+      word-wrap: break-word;
+    }
+    #player {
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 16 / 9;
+      margin: 0;
+      display: block;
+      margin: 0 !important;       /* ← 中央寄せを強制解除 */
+      padding: 0;
+    }
+    #currentFishImage {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      display: block;
+      margin: 10px auto;
+    }
+    .video-meta {
+      display: flex;
+      justify-content: flex-start;  /* ← 左寄せに変更 */
+      gap: 1rem;                     /* ← アイテム間に等間隔 */
+      font-size: 0.8rem;
+      color: #333;
+      margin: 2px 0;
+      padding: 0 1rem;
+      flex-wrap: wrap;               /* ← 狭いとき折り返す */
+    }
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 4px 1rem 10px 1rem;
+      background: #e0f0f7;
+    }
+    .toggle-button {
+      appearance: none;
+      width: 40px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 10px;
+      position: relative;
+      outline: none;
+      cursor: pointer;
+    }
+    .toggle-button:checked {
+      background: #4caf50;
+    }
+    .toggle-button::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .toggle-button:checked::before {
+      transform: translateX(20px);
+    }
+    #fishIcon {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      margin-top: 10px;
+      align-self: flex-start;
+    }
+    .icon-bar {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0.2rem 0.5rem;
+      margin-top: 0.5rem;
+      background: #dff0f7;
+      border-top: 1px solid #ccc;
+    }
+    .fish-icon {
+      display: inline-block;
+      text-align: center;
+      width: 90px;
+      word-wrap: break-word;
+      overflow-wrap:break-word;
+      vertical-align: top;
+      margin: 0 4px;
+      cursor: pointer;
+    }
+    .fish-icon img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+    .fish-icon span {
+      display: block;
+      margin-top: 1px;
+      font-size: 0.7rem;
+      white-space: normal;
+      line-height: 1.1;
+      color: #333;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .video-meta {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <div>
+        <h2 id="fishName">魚の名前</h2>
+        <p><strong>英名:</strong> <span id="fishEnglish"></span></p>
+        <p><strong>魚の仲間:</strong> <span id="fishFamily"></span></p>
+        <div class="fish-feature">
+          <strong>特徴:</strong>
+          <div id="fishFeature" class="feature-text"></div>
+        </div>
+      </div>
+      <img id="fishIcon" src="" alt="魚アイコン" />
+    </div>
+    <div class="right-panel">
+
+    <div id="playerContainer" style="position: relative;">
+      <div id="player"></div>
+      <img id="playerOverlay" src="https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/FishpediaTitle.png"
+           style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 1; z-index: 2; transition: opacity 0.3s ease;" />
+    </div>
+
+      <div class="controls" style="display: flex; align-items: center; gap: 0.5rem; padding: 10px; background: #e0f0f7; width: fit-content; margin-left: 1rem;">
+  <!-- トグルスイッチ -->
+  <label style="margin-right: 10px; display: flex; align-items: center; gap: 0.5rem;">
+    連続再生
+    <input type="checkbox" id="repeatToggle" class="toggle-button" checked />
+  </label>
+
+  <button onclick="prevGroup()">前Gr</button>
+  <button onclick="prevVideo()">前へ</button>
+  <button onclick="pauseVideo()">ポーズ</button>
+  <button onclick="stopVideo()">停止</button>
+  <button onclick="playVideo()">再生</button>
+  <button onclick="nextVideo()">次へ</button>
+  <button onclick="nextGroup()">次Gr</button>
+</div>
+      <div class="video-meta">
+        <div><strong>場所:</strong> <span id="videoPlace"></span></div>
+        <div><strong>年:</strong> <span id="videoYear"></span></div>
+        <div><strong>ファイル:</strong> <span id="videoFile"></span></div>
+      </div>
+    </div>
+
+
+
+  </div>
+  <div class="icon-bar" id="iconBar"></div>
+
+  
+<script>
+  let lastPlayerState = null;
+
+  function onPlayerStateChange(event) {
+    const overlay = document.getElementById("playerOverlay");
+    console.log("state:", event.data, "last:", lastPlayerState);
+
+    if (event.data === YT.PlayerState.ENDED) {
+      if (repeatMode && currentIndex < videoIds.length - 1) {
+        // グループ内連続再生
+        currentIndex++;
+        const entry = videoIds[currentIndex];
+        ytPlayer.loadVideoById(entry.videoId);
+        const fish = videoData.find(f => f.FishID === entry.fishId);
+        const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+        updateFishInfo(fish);
+        updateVideoMeta(video);
+        overlay.style.opacity = "0";
+        setTimeout(() => overlay.style.display = "none", 300);
+      } else if (repeatMode) {
+        // グループを超えて次へ
+        nextGroup(true);
+      } else {
+        // 最終動画停止：オーバーレイ
+        overlay.style.display = "block";
+        overlay.style.opacity = "1";
+      }
+    } else if (event.data === YT.PlayerState.PLAYING) {
+      // 再生中：オーバーレイ非表示
+      overlay.style.opacity = "0";
+      setTimeout(() => overlay.style.display = "none", 300);
+    } else if (
+      event.data === YT.PlayerState.UNSTARTED &&
+      (lastPlayerState === YT.PlayerState.PLAYING || lastPlayerState === YT.PlayerState.PAUSED)
+    ) {
+      // 強制停止とみなしてオーバーレイ表示
+      overlay.style.display = "block";
+      overlay.style.opacity = "1";
+    }
+    lastPlayerState = event.data;
+  }
+
+  function nextGroup(fromRepeat = false) {
+    currentGroupId = currentGroupId < MAX_GROUP ? currentGroupId + 1 : 1;
+    fetch(BASE_API_URL + currentGroupId)
+      .then(res => res.json())
+      .then(data => {
+        const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+        if (hasVideo) {
+          loadGroup(data);
+          if (fromRepeat) {
+            setTimeout(() => startPlayback(), 500);
+          }
+        } else {
+          nextGroup(fromRepeat);
+        }
+      });
+  }
+
+  function prevGroup(fromRepeat = false) {
+    currentGroupId = currentGroupId > 1 ? currentGroupId - 1 : MAX_GROUP;
+    fetch(BASE_API_URL + currentGroupId)
+      .then(res => res.json())
+      .then(data => {
+        const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+        if (hasVideo) {
+          loadGroup(data);
+          if (fromRepeat) {
+            setTimeout(() => startPlayback(), 500);
+          }
+        } else {
+          prevGroup(fromRepeat);
+        }
+      });
+  }
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+
+</body>
+</html>

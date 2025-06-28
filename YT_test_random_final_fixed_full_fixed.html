@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fish Viewer - ランダム版</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #eef6fb;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
+    .left-panel, .right-panel {
+      box-sizing: border-box;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .left-panel {
+      flex: 1 1 300px;
+      max-width: 600px;  /* または max-width: none; */
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-panel {
+      flex: 0 0 640px;
+      max-width: 640px;
+      overflow: hidden;
+    }
+    .fish-feature {
+      margin-top: 1rem;
+    }
+    .feature-text {
+      max-width: 100%;
+      white-space: pre-wrap; /* 改行を保持して折り返す */
+      word-wrap: break-word;
+    }
+    #player {
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 16 / 9;
+      margin: 0;
+      display: block;
+      margin: 0 !important;       /* ← 中央寄せを強制解除 */
+      padding: 0;
+    }
+    #currentFishImage {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      display: block;
+      margin: 10px auto;
+    }
+    .video-meta {
+      display: flex;
+      justify-content: flex-start;  /* ← 左寄せに変更 */
+      gap: 1rem;                     /* ← アイテム間に等間隔 */
+      font-size: 0.8rem;
+      color: #333;
+      margin: 2px 0;
+      padding: 0 1rem;
+      flex-wrap: wrap;               /* ← 狭いとき折り返す */
+    }
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 4px 1rem 10px 1rem;
+      background: #e0f0f7;
+    }
+    .toggle-button {
+      appearance: none;
+      width: 40px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 10px;
+      position: relative;
+      outline: none;
+      cursor: pointer;
+    }
+    .toggle-button:checked {
+      background: #4caf50;
+    }
+    .toggle-button::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .toggle-button:checked::before {
+      transform: translateX(20px);
+    }
+    #fishIcon {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      margin-top: 10px;
+      align-self: flex-start;
+    }
+    .icon-bar {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0.2rem 0.5rem;
+      margin-top: 0.5rem;
+      background: #dff0f7;
+      border-top: 1px solid #ccc;
+    }
+    .fish-icon {
+      display: inline-block;
+      text-align: center;
+      width: 90px;
+      word-wrap: break-word;
+      overflow-wrap:break-word;
+      vertical-align: top;
+      margin: 0 4px;
+      cursor: pointer;
+    }
+    .fish-icon img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+    .fish-icon span {
+      display: block;
+      margin-top: 1px;
+      font-size: 0.7rem;
+      white-space: normal;
+      line-height: 1.1;
+      color: #333;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .video-meta {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <div>
+        <h2>
+          <span id="fishName">魚の名前</span>
+          <span id="videoCount" style="font-size:0.8rem; margin-left:0.5rem;">
+            動画総数：0本
+          </span>
+        </h2>
+        <p><strong>英名:</strong> <span id="fishEnglish"></span></p>
+        <p><strong>魚の仲間:</strong> <span id="fishFamily"></span></p>
+        <div class="fish-feature">
+          <strong>特徴:</strong>
+          <div id="fishFeature" class="feature-text"></div>
+        </div>
+      </div>
+      <img id="fishIcon" src="" alt="魚アイコン" />
+    </div>
+    <div class="right-panel">
+
+    <div id="playerContainer" style="position: relative;">
+      <div id="player"></div>
+      <img id="playerOverlay" src="https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/FishpediaTitle.png"
+           style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 1; z-index: 2; transition: opacity 0.3s ease;" />
+    </div>
+
+      <div class="controls" style="display: flex; align-items: center; gap: 0.5rem; padding: 10px; background: #e0f0f7; width: fit-content; margin-left: 1rem;">
+  <!-- トグルスイッチ -->
+  <label style="margin-right: 10px; display: flex; align-items: center; gap: 0.5rem;">
+    連続再生
+    <input type="checkbox" id="repeatToggle" class="toggle-button" checked />
+  </label>
+
+  <button onclick="prevGroup()">前Gr</button>
+  <button onclick="prevVideo()">前へ</button>
+  <button onclick="pauseVideo()">ポーズ</button>
+  <button onclick="stopVideo()">停止</button>
+  <button onclick="playVideo()">再生</button>
+  <button onclick="nextVideo()">次へ</button>
+  <button onclick="nextGroup()">次Gr</button>
+</div>
+      <div class="video-meta">
+        <div><strong>場所:</strong> <span id="videoPlace"></span></div>
+        <div><strong>年:</strong> <span id="videoYear"></span></div>
+        <div><strong>ファイル:</strong> <span id="videoFile"></span></div>
+      </div>
+    </div>
+
+
+
+  </div>
+  <div class="icon-bar" id="iconBar"></div>
+
+  <script>
+    const MAX_GROUP = 56;
+    const BASE_API_URL = "https://script.google.com/macros/s/AKfycbx9xS8N0HadBqim2MdMsW-G2HfjJ-hyMzGmSsvOuRlZx1fCJayqMJPsmbRiIcVzUSoX_g/exec?groupId=";
+
+    let videoData = [];
+    let videoIds = [];
+    let ytPlayer;
+    let currentIndex = 0;
+    let autoPlayPending = false;
+
+  /**
+   * 動画を1本でも持つグループをランダム取得し描画
+   */
+  function fetchGroupWithVideos() {
+    const gid = getRandomGroupId();
+    fetch(BASE_API_URL + gid)
+      .then(res => res.json())
+      .then(data => {
+        // 全動画数を調べる
+        const totalVideos = data.reduce((sum, fish) => {
+          return sum + (fish.Videos || [])
+                           .filter(v => v.YouTubeURL).length;
+        }, 0);
+        // 動画なしなら別グループを再取得
+        if (totalVideos === 0) {
+          return fetchGroupWithVideos();
+        }
+        // データ確定
+        videoData = data;                            // :contentReference[oaicite:0]{index=0}
+        videoIds = [];
+
+        // 五十音順ソート
+        data.sort((a, b) => a.Name.localeCompare(b.Name, 'ja'));
+
+        // アイコンバー構築＆videoIds組み立て
+        const iconBar = document.getElementById("iconBar");
+        iconBar.innerHTML = "";
+        data.forEach(fish => {
+          const hasVideo = (fish.Videos || []).some(v => v.YouTubeURL);
+          const iconDiv = document.createElement("div");
+          iconDiv.className = "fish-icon";
+          const img = document.createElement("img");
+          img.src = hasVideo ? fish.IconURL : fish.IconInactiveURL;
+          img.onclick = () => playVideoByFish(fish.FishID);
+          const label = document.createElement("span");
+          label.textContent = fish.Name;
+          iconDiv.appendChild(img);
+          iconDiv.appendChild(label);
+          iconBar.appendChild(iconDiv);
+          if (hasVideo) {
+            const firstVideo = (fish.Videos || []).find(v => v.YouTubeURL);
+            const vid = extractVideoId(firstVideo.YouTubeURL);
+            videoIds.push({ fishId: fish.FishID, videoId: vid });
+          }
+        });
+
+        // ── 全再生可能動画数を表示 ──
+        updateVideoCount();
+
+        // 最初の動画を読み込んで、情報表示
+        if (videoIds.length > 0) {
+          const first = videoIds[0];
+          ytPlayer.cueVideoById(first.videoId);
+          const fish  = data.find(f => f.FishID === first.fishId);
+          const video = (fish?.Videos || [])
+                          .find(v => extractVideoId(v.YouTubeURL) === first.videoId) || {};
+          updateFishInfo(fish);
+          updateVideoMeta(video);
+        }
+      });
+  }
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player("player", {
+    height: "360",
+    width: "640",
+    videoId: "",
+    playerVars: {
+      rel: 0
+    },
+    events: {
+      onStateChange: onPlayerStateChange,
+    },
+  });
+
+  const groupId = getRandomGroupId();
+  fetch(BASE_API_URL + groupId)
+    .then(res => res.json())
+    .then(data => {
+      videoData = data;
+      videoIds = [];
+
+      // 五十音順に並べる
+      data.sort((a, b) => a.Name.localeCompare(b.Name, 'ja'));
+
+      const iconBar = document.getElementById("iconBar");
+      iconBar.innerHTML = "";
+
+      data.forEach(fish => {
+        const hasVideo = (fish.Videos || []).some(v => v.YouTubeURL);
+        const iconDiv = document.createElement("div");
+        iconDiv.className = "fish-icon";
+
+        const img = document.createElement("img");
+        img.src = hasVideo ? fish.IconURL : fish.IconInactiveURL;
+        img.onclick = () => playVideoByFish(fish.FishID);
+
+        const label = document.createElement("span");
+        label.textContent = fish.Name;
+
+        iconDiv.appendChild(img);
+        iconDiv.appendChild(label);
+        iconBar.appendChild(iconDiv);
+
+        if (hasVideo) {
+          const firstVideo = (fish.Videos || []).find(v => v.YouTubeURL);
+          if (firstVideo) {
+            const vid = extractVideoId(firstVideo.YouTubeURL);
+            videoIds.push({ fishId: fish.FishID, videoId: vid });
+          }
+        }
+      });
+
+      if (videoIds.length > 0) {
+        const first = videoIds[0];
+        ytPlayer.cueVideoById(first.videoId);   // ▶ 自動再生させず、動画を読み込む
+        const fish = data.find(f => f.FishID === first.fishId);
+        const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === first.videoId) || {};
+        updateFishInfo(fish);
+        updateVideoMeta(video);
+      }
+    });
+}
+
+    function getRandomGroupId() {
+      return Math.floor(Math.random() * MAX_GROUP) + 1;
+    }
+
+    function extractVideoId(url) {
+      const match = url?.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/);
+      return match ? match[1] : "";
+    }
+
+    /**
+     * videoData 全体から、YouTubeURL を持つ動画の本数を合計し表示
+    */
+    function updateVideoCount() {
+      console.log("🐟 videoIds:", videoIds);
+      console.log("🐟 videoIds.length:", videoIds.length);
+      
+      const total = videoIds.length;
+      document.getElementById("videoCount")
+              .textContent = `動画総数：${total}本`;
+    }
+
+        function updateFishInfo(fish) {
+      document.getElementById("fishName").textContent = fish.Name;
+      document.getElementById("fishEnglish").textContent = fish.英名 || "";
+      document.getElementById("fishFamily").textContent = fish["魚の仲間"] || "";
+      document.getElementById("fishFeature").textContent = fish.特徴 || "";
+      document.getElementById("fishIcon").src = fish.IconURL;
+    }
+
+    function updateVideoMeta(video) {
+      document.getElementById("videoPlace").textContent = video.撮影場所 || "";
+      document.getElementById("videoYear").textContent = video.撮影年 || "";
+      document.getElementById("videoFile").textContent = video.動画ファイル名 || "";
+    }
+
+    /**
+     * 全グループを対象に、再生可能な動画の本数を集計して表示
+    */
+    function countTotalVideos() {
+      // BASE_API_URL にパラメータなしで全データを返すよう GAS を調整している前提
+      fetch(BASE_API_URL)
+        .then(res => res.json())
+        .then(allData => {
+          const total = allData.reduce((sum, fish) => {
+            return sum + (fish.Videos || [])
+                             .filter(v => v.YouTubeURL).length;
+          }, 0);
+          document.getElementById("videoCount")
+                  .textContent = `動画総数：${total}本`;
+        });
+    }
+
+    function playVideoByFish(fishId) {
+       const fish = videoData.find(f => f.FishID === fishId);
+       const videoEntry = videoIds.find(v => v.fishId === fishId);
+       const video = (fish?.Videos || []).find(v =>
+         extractVideoId(v.YouTubeURL) === videoEntry?.videoId
+       );
+       if (videoEntry && video) {
+         currentIndex = videoIds.findIndex(v => v.fishId === fishId);
+         ytPlayer.loadVideoById(videoEntry.videoId);
+         document.getElementById("playerOverlay").style.display = "none";
+         document.getElementById("playerOverlay").style.opacity = "0";
+         updateFishInfo(fish);
+         updateVideoMeta(video);
+       }
+    }
+
+let lastState = null;
+
+
+  
+let currentGroupId = 0;
+let repeatMode = true;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("repeatToggle");
+  repeatMode = toggle.checked;
+  toggle.addEventListener("change", () => {
+    repeatMode = toggle.checked;
+  });
+});
+
+
+function getValidGroupId() {
+  const tryGroup = () => {
+    currentGroupId = getRandomGroupId();
+    fetch(BASE_API_URL + currentGroupId)
+      .then(res => res.json())
+      .then(data => {
+        const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+        if (!hasVideo) {
+          tryGroup();
+        } else {
+          loadGroup(data);
+        }
+      });
+  };
+  tryGroup();
+}
+
+function loadGroup(data) {
+  videoData = data;
+  videoIds = [];
+  data.sort((a, b) => a.Name.localeCompare(b.Name, 'ja'));
+  const iconBar = document.getElementById("iconBar");
+  iconBar.innerHTML = "";
+  data.forEach(fish => {
+    const hasVideo = (fish.Videos || []).some(v => v.YouTubeURL);
+    const iconDiv = document.createElement("div");
+    iconDiv.className = "fish-icon";
+    const img = document.createElement("img");
+    img.src = hasVideo ? fish.IconURL : fish.IconInactiveURL;
+    img.onclick = () => playVideoByFish(fish.FishID);
+    const label = document.createElement("span");
+    label.textContent = fish.Name;
+    iconDiv.appendChild(img);
+    iconDiv.appendChild(label);
+    iconBar.appendChild(iconDiv);
+    if (hasVideo) {
+      const firstVideo = (fish.Videos || []).find(v => v.YouTubeURL);
+      if (firstVideo) {
+        const vid = extractVideoId(firstVideo.YouTubeURL);
+        videoIds.push({ fishId: fish.FishID, videoId: vid });
+      }
+    }
+  });
+  if (videoIds.length > 0) {
+    const first = videoIds[0];
+    const fish = data.find(f => f.FishID === first.fishId);
+    const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === first.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+    ytPlayer.cueVideoById(first.videoId);  // ▶ 自動再生せずに先頭動画を読み込む
+  }
+}
+
+let lastPlayerState = null;
+
+/**
+ * YouTube プレイヤーの状態が変化したときに呼ばれる
+ */
+function onPlayerStateChange(event) {
+  const overlay = document.getElementById("playerOverlay");
+
+  // ── 変更点①: CUED 状態で autoPlayPending が立っていれば再生をトリガー ──
+  if (event.data === YT.PlayerState.CUED && autoPlayPending) {
+    autoPlayPending = false;
+    console.log('autoPlayPending CUED→PLAY');
+    ytPlayer.playVideo();
+    ytPlayer.unMute();  // 必要に応じてアンミュート
+    return;
+  }
+
+  // ── 通常ステートハンドリング ──
+  switch (event.data) {
+    case YT.PlayerState.ENDED:
+      // 再生終了時の連続再生処理
+      if (repeatMode) {
+        if (currentIndex < videoIds.length - 1) {
+          // 同グループ内の次動画へ
+          nextVideo();
+        } else {
+          // 最後の動画 → 次グループを自動再生
+          nextGroup(true);
+        }
+      } else {
+        // repeatMode OFF → オーバーレイ表示のみ
+        overlay.style.display = 'block';
+        overlay.style.opacity = '1';
+      }
+      break;
+
+    case YT.PlayerState.PLAYING:
+      // 再生開始 → オーバーレイを隠す
+      overlay.style.display = 'none';
+      overlay.style.opacity = '0';
+      break;
+
+    case YT.PlayerState.UNSTARTED:
+      // 強制停止やリセットなどを検知
+      if (
+        lastPlayerState === YT.PlayerState.PLAYING ||
+        lastPlayerState === YT.PlayerState.PAUSED
+      ) {
+        overlay.style.display = 'block';
+        overlay.style.opacity = '1';
+      }
+      break;
+
+    // 必要に応じて PAUSED, BUFFERING 等も追加可能
+  }
+
+  // 状態を記録
+  lastPlayerState = event.data;
+}
+
+
+function playVideo() { ytPlayer.playVideo(); }
+function pauseVideo() { ytPlayer.pauseVideo(); }
+function stopVideo() { ytPlayer.stopVideo(); }
+
+function nextVideo() {
+  if (currentIndex < videoIds.length - 1) {
+    // 同グループ内の次動画へ
+    currentIndex++;
+    const entry = videoIds[currentIndex];
+    ytPlayer.loadVideoById(entry.videoId);
+
+    // 情報更新
+    const fish = videoData.find(f => f.FishID === entry.fishId);
+    const video = (fish?.Videos || [])
+      .find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+
+  } else {
+    // グループ末尾 → 次グループへ移行（再生せずキューのみ）
+    nextGroup(false);
+  }
+}
+
+function prevVideo() {
+  if (currentIndex > 0) {
+    // 同グループ内の前動画へ
+    currentIndex--;
+    const entry = videoIds[currentIndex];
+    ytPlayer.loadVideoById(entry.videoId);
+
+    // 情報更新
+    const fish = videoData.find(f => f.FishID === entry.fishId);
+    const video = (fish?.Videos || [])
+      .find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+
+  } else {
+    // グループ先頭 → 前グループへ移行（再生せずキューのみ）
+    prevGroup(false);
+  }
+}
+
+function nextGroup(play = false) {
+  // 連番で次グループIDを計算
+  // 1) グループID更新
+  currentGroupId = currentGroupId < MAX_GROUP ? currentGroupId + 1 : 1;
+
+  fetch(BASE_API_URL + currentGroupId)
+    .then(res => res.json())
+    .then(data => {
+      const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+      if (!hasVideo) {
+        // 動画なしなら次へ再帰
+        return nextGroup(play);
+      } 
+            // 2) データ読み込み＆UI更新
+          loadGroup(data);
+            // ３）必ずインデックスをリセット
+          currentIndex = 0;
+        if (play) {
+            // ４）最初の動画情報でUI更新
+            const entry = videoIds[currentIndex];
+            console.log(`nextGroup(play): group=${currentGroupId}, index=${currentIndex}`, entry);
+            const fish = videoData.find(f => f.FishID === entry.fishId);
+            const video = (fish?.Videos || [])
+              .find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+            updateFishInfo(fish);
+            updateVideoMeta(video);
+            // ４）自動再生
+            ytPlayer.loadVideoById(entry.videoId);
+            ytPlayer.mute();             // ブラウザ規制回避に一時ミュート
+            autoPlayPending = true;
+          }
+        })
+        .catch(err => console.error("nextGroup error:", err));
+      }
+
+function prevGroup(play = false) {
+  currentGroupId = currentGroupId > 1 ? currentGroupId - 1 : MAX_GROUP;
+  fetch(BASE_API_URL + currentGroupId)
+    .then(res => res.json())
+    .then(data => {
+      const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+      if (!hasVideo) {
+        prevGroup(play);
+      } else {
+        if (play) {
+          loadGroup(data);
+          const first = videoIds[0];
+          ytPlayer.loadVideoById(first.videoId);
+        } else {
+          loadGroup(data);
+        }
+      }
+    });
+}
+
+</script>
+  
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+</body>
+</html>

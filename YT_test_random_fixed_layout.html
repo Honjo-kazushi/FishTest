@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fish Viewer - ランダム版</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #eef6fb;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
+    .left-panel, .right-panel {
+      box-sizing: border-box;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .left-panel {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    .right-panel {
+      flex: 2 1 600px;
+    }
+    #player {
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 16 / 9;
+      margin: auto;
+      display: block;
+    }
+    .video-meta {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #333;
+    }
+    #fishIcon {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      margin-top: 10px;
+      align-self: flex-start;
+    }
+    .icon-bar {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0.5rem;
+      background: #dff0f7;
+      border-top: 1px solid #ccc;
+    }
+    .fish-icon {
+      display: inline-block;
+      text-align: center;
+      width: 110px;
+      vertical-align: top;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+    .fish-icon img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+    .fish-icon span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: #333;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .video-meta {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <div>
+        <h2 id="fishName">魚の名前</h2>
+        <p><strong>英名:</strong> <span id="fishEnglish"></span></p>
+        <p><strong>魚の仲間:</strong> <span id="fishFamily"></span></p>
+        <p><strong>特徴:</strong> <span id="fishFeature"></span></p>
+      </div>
+      <img id="fishIcon" src="" alt="魚アイコン" />
+    </div>
+    <div class="right-panel">
+      <div id="player"></div>
+      <div class="video-meta">
+        <div><strong>場所:</strong> <span id="videoPlace"></span></div>
+        <div><strong>年:</strong> <span id="videoYear"></span></div>
+        <div><strong>ファイル:</strong> <span id="videoFile"></span></div>
+      </div>
+    </div>
+
+<div class="controls" style="text-align: center; padding: 10px; background: #e0f0f7;">
+  <label style="margin-right: 10px;">
+    <input type="radio" name="repeatMode" value="on" checked /> 連続再生
+  </label>
+  <button onclick="prevGroup()">前Gr</button>
+  <button onclick="prevVideo()">前へ</button>
+  <button onclick="pauseVideo()">ポーズ</button>
+  <button onclick="stopVideo()">停止</button>
+  <button onclick="playVideo()">再生</button>
+  <button onclick="nextVideo()">次へ</button>
+  <button onclick="nextGroup()">次Gr</button>
+</div>
+
+  </div>
+  <div class="icon-bar" id="iconBar"></div>
+
+  <script>
+    const MAX_GROUP = 56;
+    const BASE_API_URL = "https://script.google.com/macros/s/AKfycbx9xS8N0HadBqim2MdMsW-G2HfjJ-hyMzGmSsvOuRlZx1fCJayqMJPsmbRiIcVzUSoX_g/exec?groupId=";
+
+    let videoData = [];
+    let videoIds = [];
+    let ytPlayer;
+    let currentIndex = 0;
+
+    function getRandomGroupId() {
+      return Math.floor(Math.random() * MAX_GROUP) + 1;
+    }
+
+    function extractVideoId(url) {
+      const match = url?.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/);
+      return match ? match[1] : "";
+    }
+
+    function updateFishInfo(fish) {
+      document.getElementById("fishName").textContent = fish.Name;
+      document.getElementById("fishEnglish").textContent = fish.英名 || "";
+      document.getElementById("fishFamily").textContent = fish["魚の仲間"] || "";
+      document.getElementById("fishFeature").textContent = fish.特徴 || "";
+      document.getElementById("fishIcon").src = fish.IconURL;
+    }
+
+    function updateVideoMeta(video) {
+      document.getElementById("videoPlace").textContent = video.撮影場所 || "";
+      document.getElementById("videoYear").textContent = video.撮影年 || "";
+      document.getElementById("videoFile").textContent = video.動画ファイル名 || "";
+    }
+
+    function playVideoByFish(fishId) {
+      const fish = videoData.find(f => f.FishID === fishId);
+      const videoEntry = videoIds.find(v => v.fishId === fishId);
+      const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === videoEntry?.videoId);
+      if (videoEntry && video) {
+        currentIndex = videoIds.findIndex(v => v.fishId === fishId);
+        ytPlayer.loadVideoById(videoEntry.videoId);
+        updateFishInfo(fish);
+        updateVideoMeta(video);
+      }
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        currentIndex++;
+        if (currentIndex < videoIds.length) {
+          const entry = videoIds[currentIndex];
+          ytPlayer.loadVideoById(entry.videoId);
+          const fish = videoData.find(f => f.FishID === entry.fishId);
+          const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+          updateFishInfo(fish);
+          updateVideoMeta(video);
+        }
+      }
+    }
+
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player("player", {
+        height: "360",
+        width: "640",
+        videoId: "",
+        events: {
+          onStateChange: onPlayerStateChange,
+        },
+      });
+
+      const groupId = getRandomGroupId();
+      fetch(BASE_API_URL + groupId)
+        .then(res => res.json())
+        .then(data => {
+          videoData = data;
+          videoIds = [];
+
+          // 五十音順に並べる
+          data.sort((a, b) => a.Name.localeCompare(b.Name, 'ja'));
+
+          const iconBar = document.getElementById("iconBar");
+          iconBar.innerHTML = "";
+
+          data.forEach(fish => {
+            const hasVideo = (fish.Videos || []).some(v => v.YouTubeURL);
+            const iconDiv = document.createElement("div");
+            iconDiv.className = "fish-icon";
+
+            const img = document.createElement("img");
+            img.src = hasVideo ? fish.IconURL : fish.IconInactiveURL;
+            img.onclick = () => playVideoByFish(fish.FishID);
+
+            const label = document.createElement("span");
+            label.textContent = fish.Name;
+
+            iconDiv.appendChild(img);
+            iconDiv.appendChild(label);
+            iconBar.appendChild(iconDiv);
+
+            if (hasVideo) {
+              const firstVideo = (fish.Videos || []).find(v => v.YouTubeURL);
+              if (firstVideo) {
+                const vid = extractVideoId(firstVideo.YouTubeURL);
+                videoIds.push({ fishId: fish.FishID, videoId: vid });
+              }
+            }
+          });
+
+          if (videoIds.length > 0) {
+            const first = videoIds[0];
+            ytPlayer.loadVideoById(first.videoId);
+            const fish = data.find(f => f.FishID === first.fishId);
+            const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === first.videoId) || {};
+            updateFishInfo(fish);
+            updateVideoMeta(video);
+          }
+        });
+    }
+  
+let currentGroupId = 0;
+let repeatMode = true;
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('input[name="repeatMode"]').forEach(el => {
+    el.addEventListener("change", () => {
+      repeatMode = document.querySelector('input[name="repeatMode"]:checked').value === "on";
+    });
+  });
+});
+
+function getValidGroupId() {
+  const tryGroup = () => {
+    currentGroupId = getRandomGroupId();
+    fetch(BASE_API_URL + currentGroupId)
+      .then(res => res.json())
+      .then(data => {
+        const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+        if (!hasVideo) {
+          tryGroup();
+        } else {
+          loadGroup(data);
+        }
+      });
+  };
+  tryGroup();
+}
+
+function loadGroup(data) {
+  videoData = data;
+  videoIds = [];
+  data.sort((a, b) => a.Name.localeCompare(b.Name, 'ja'));
+  const iconBar = document.getElementById("iconBar");
+  iconBar.innerHTML = "";
+  data.forEach(fish => {
+    const hasVideo = (fish.Videos || []).some(v => v.YouTubeURL);
+    const iconDiv = document.createElement("div");
+    iconDiv.className = "fish-icon";
+    const img = document.createElement("img");
+    img.src = hasVideo ? fish.IconURL : fish.IconInactiveURL;
+    img.onclick = () => playVideoByFish(fish.FishID);
+    const label = document.createElement("span");
+    label.textContent = fish.Name;
+    iconDiv.appendChild(img);
+    iconDiv.appendChild(label);
+    iconBar.appendChild(iconDiv);
+    if (hasVideo) {
+      const firstVideo = (fish.Videos || []).find(v => v.YouTubeURL);
+      if (firstVideo) {
+        const vid = extractVideoId(firstVideo.YouTubeURL);
+        videoIds.push({ fishId: fish.FishID, videoId: vid });
+      }
+    }
+  });
+  if (videoIds.length > 0) {
+    const first = videoIds[0];
+    const fish = data.find(f => f.FishID === first.fishId);
+    const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === first.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+  }
+}
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player("player", {
+    height: "360",
+    width: "640",
+    videoId: "",
+    events: {
+      onStateChange: onPlayerStateChange,
+    },
+  });
+  getValidGroupId();
+}
+
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.ENDED && repeatMode) {
+    currentIndex++;
+    if (currentIndex < videoIds.length) {
+      const entry = videoIds[currentIndex];
+      ytPlayer.loadVideoById(entry.videoId);
+      const fish = videoData.find(f => f.FishID === entry.fishId);
+      const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+      updateFishInfo(fish);
+      updateVideoMeta(video);
+    }
+  }
+}
+
+function playVideo() { ytPlayer.playVideo(); }
+function pauseVideo() { ytPlayer.pauseVideo(); }
+function stopVideo() { ytPlayer.stopVideo(); }
+
+function nextVideo() {
+  currentIndex++;
+  if (currentIndex < videoIds.length) {
+    const entry = videoIds[currentIndex];
+    ytPlayer.loadVideoById(entry.videoId);
+    const fish = videoData.find(f => f.FishID === entry.fishId);
+    const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+  } else {
+    currentIndex = videoIds.length - 1;
+  }
+}
+
+function prevVideo() {
+  currentIndex--;
+  if (currentIndex >= 0) {
+    const entry = videoIds[currentIndex];
+    ytPlayer.loadVideoById(entry.videoId);
+    const fish = videoData.find(f => f.FishID === entry.fishId);
+    const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+  } else {
+    currentIndex = 0;
+  }
+}
+
+function nextGroup() { getValidGroupId(); }
+
+function prevGroup() {
+  currentGroupId = currentGroupId > 1 ? currentGroupId - 1 : MAX_GROUP;
+  fetch(BASE_API_URL + currentGroupId)
+    .then(res => res.json())
+    .then(data => {
+      const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+      if (hasVideo) loadGroup(data);
+      else prevGroup();
+    });
+}
+
+</script>
+  <script src="https://www.youtube.com/iframe_api">
+let currentGroupId = 0;
+let repeatMode = true;
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('input[name="repeatMode"]').forEach(el => {
+    el.addEventListener("change", () => {
+      repeatMode = document.querySelector('input[name="repeatMode"]:checked').value === "on";
+    });
+  });
+});
+
+function getValidGroupId() {
+  const tryGroup = () => {
+    currentGroupId = getRandomGroupId();
+    fetch(BASE_API_URL + currentGroupId)
+      .then(res => res.json())
+      .then(data => {
+        const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+        if (!hasVideo) {
+          tryGroup();
+        } else {
+          loadGroup(data);
+        }
+      });
+  };
+  tryGroup();
+}
+
+function loadGroup(data) {
+  videoData = data;
+  videoIds = [];
+  data.sort((a, b) => a.Name.localeCompare(b.Name, 'ja'));
+  const iconBar = document.getElementById("iconBar");
+  iconBar.innerHTML = "";
+  data.forEach(fish => {
+    const hasVideo = (fish.Videos || []).some(v => v.YouTubeURL);
+    const iconDiv = document.createElement("div");
+    iconDiv.className = "fish-icon";
+    const img = document.createElement("img");
+    img.src = hasVideo ? fish.IconURL : fish.IconInactiveURL;
+    img.onclick = () => playVideoByFish(fish.FishID);
+    const label = document.createElement("span");
+    label.textContent = fish.Name;
+    iconDiv.appendChild(img);
+    iconDiv.appendChild(label);
+    iconBar.appendChild(iconDiv);
+    if (hasVideo) {
+      const firstVideo = (fish.Videos || []).find(v => v.YouTubeURL);
+      if (firstVideo) {
+        const vid = extractVideoId(firstVideo.YouTubeURL);
+        videoIds.push({ fishId: fish.FishID, videoId: vid });
+      }
+    }
+  });
+  if (videoIds.length > 0) {
+    const first = videoIds[0];
+    const fish = data.find(f => f.FishID === first.fishId);
+    const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === first.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+  }
+}
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player("player", {
+    height: "360",
+    width: "640",
+    videoId: "",
+    events: {
+      onStateChange: onPlayerStateChange,
+    },
+  });
+  getValidGroupId();
+}
+
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.ENDED && repeatMode) {
+    currentIndex++;
+    if (currentIndex < videoIds.length) {
+      const entry = videoIds[currentIndex];
+      ytPlayer.loadVideoById(entry.videoId);
+      const fish = videoData.find(f => f.FishID === entry.fishId);
+      const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+      updateFishInfo(fish);
+      updateVideoMeta(video);
+    }
+  }
+}
+
+function playVideo() { ytPlayer.playVideo(); }
+function pauseVideo() { ytPlayer.pauseVideo(); }
+function stopVideo() { ytPlayer.stopVideo(); }
+
+function nextVideo() {
+  currentIndex++;
+  if (currentIndex < videoIds.length) {
+    const entry = videoIds[currentIndex];
+    ytPlayer.loadVideoById(entry.videoId);
+    const fish = videoData.find(f => f.FishID === entry.fishId);
+    const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+  } else {
+    currentIndex = videoIds.length - 1;
+  }
+}
+
+function prevVideo() {
+  currentIndex--;
+  if (currentIndex >= 0) {
+    const entry = videoIds[currentIndex];
+    ytPlayer.loadVideoById(entry.videoId);
+    const fish = videoData.find(f => f.FishID === entry.fishId);
+    const video = (fish?.Videos || []).find(v => extractVideoId(v.YouTubeURL) === entry.videoId) || {};
+    updateFishInfo(fish);
+    updateVideoMeta(video);
+  } else {
+    currentIndex = 0;
+  }
+}
+
+function nextGroup() { getValidGroupId(); }
+
+function prevGroup() {
+  currentGroupId = currentGroupId > 1 ? currentGroupId - 1 : MAX_GROUP;
+  fetch(BASE_API_URL + currentGroupId)
+    .then(res => res.json())
+    .then(data => {
+      const hasVideo = data.some(f => (f.Videos || []).some(v => v.YouTubeURL));
+      if (hasVideo) loadGroup(data);
+      else prevGroup();
+    });
+}
+
+</script>
+</body>
+</html>
