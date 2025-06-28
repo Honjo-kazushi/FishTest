@@ -423,7 +423,25 @@ let currentLetter = "";
       // 初期グループで動画を取得
       videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${initialGroup}`)
                        .then(res => res.json());
-    }
+
+      // 初期表示：選択中のグループの先頭魚情報を取得
+      const selectedGroup = Number(document.getElementById('groupSelect').value);
+      const groupVideos = videos.filter(v => {
+      const fish = fishes.find(f => f.FishID === v.FishID);
+      return fish && fish.GroupID === selectedGroup;
+    });
+      if (groupVideos.length > 0) {
+        const firstFishId = groupVideos[0].FishID;
+        const firstFish   = fishes.find(f => f.FishID === firstFishId);
+        const firstVideo  = groupVideos[0];
+       // 情報表示
+        updateFishInfo(firstFish);
+        updateVideoMeta(firstVideo);
+       // 必要に応じて自動再生したい場合は以下をアンコメント
+      // playVideoByFish(firstFishId);
+      
+      }
+  }
 
     document.addEventListener('DOMContentLoaded', initData);
 
@@ -642,7 +660,7 @@ function onYouTubeIframeAPIReady() {
 function renderIconBar() {
   const bar = document.getElementById('iconBar');
   bar.innerHTML = '';           // 一旦クリア
-
+  const selectedPlace = document.getElementById('placeSelect').value;
   const seen = new Set();       // 重複防止セット
 
   videos.forEach(entry => {
@@ -656,8 +674,14 @@ function renderIconBar() {
 
     // アイコン画像要素を作成
     const img = document.createElement('img');
-    img.src = fish.IconURL;               // カラーアイコン
-    img.alt = fish.Name;                  // alt属性に魚名
+    img.dataset.fishId = fid;
+    // 場所フィルター時のみ白黒切り替え
+    if (selectedPlace) {
+      const atPlace = entry.撮影場所 === selectedPlace;
+      img.src = atPlace ? fish.IconURL : fish.IconInactiveURL;
+    } else {
+      img.src = fish.IconURL;
+    }    img.alt = fish.Name;                  // alt属性に魚名
     img.classList.add('fish-icon');       // 既存の CSS クラス
 
     // クリックでその魚を選択
@@ -668,6 +692,11 @@ function renderIconBar() {
 
     bar.appendChild(img);
   });
+    // アイコンバー再描画後、動画IDリストを更新
+    videoIds = videos.map(v => ({
+    fishId: v.FishID,
+    videoId: extractVideoId(v.YouTubeURL)
+  }));
 }
 
     function getRandomGroupId() {
@@ -711,15 +740,7 @@ function renderIconBar() {
 
 let lastState = null;
   
-document.querySelectorAll('.fish-icon img').forEach(img=>{
-  const id = Number(img.dataset.fishId);
-  const ok = videos.some(v=>v.FishID===id && v.place===selectedPlace);
-  img.src = ok ? fishes.find(f=>f.FishID===id).IconURL
-               : fishes.find(f=>f.FishID===id).IconInactiveURL;
-});
-
-
-
+ 
 
 /**
  * YouTube プレイヤーの状態が変化したときに呼ばれる
