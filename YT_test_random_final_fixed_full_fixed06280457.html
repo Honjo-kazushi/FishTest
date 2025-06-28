@@ -293,13 +293,14 @@
         <button data-kana="は">は</button>
         <button data-kana="ま">ま</button>
         <button data-kana="や">や</button>
+        <button data-kana="ら">ら</button>
+        <button data-kana="わ">わ</button>
         <button data-kana="全">全</button>
       </div>
-      <!-- セレクトボックス群 -->
       <div>
         <select id="fishSelect">
           <option value="">魚を選択</option>
-      </select>
+        </select>
       </div>
       <div>
         <select id="placeSelect">
@@ -382,8 +383,10 @@
       "慶良間"
     ];
     
-    // フィルタ用文字の定義
-    const LETTERS = ["あ","か","さ","た","な","は","ま","や","ら","わ","全"];
+
+// 現在の選択文字（""なら全表示）
+let currentLetter = "";
+
 
     async function initData() {
       // 1) 魚メタデータを取得
@@ -402,7 +405,7 @@
       //populatePlaceSelect(allPlaces);
       // 5) 魚選択ドロップダウンに全件表示
       populateFishSelect(fishes);
-      // 6) 乱数で初期グループIDを決定・セット
+       // 6) 乱数で初期グループIDを決定・セット
       const initialGroup = Math.floor(Math.random() * MAX_GROUP) + 1;
       currentGroupId = initialGroup;
       // 7) 初期グループの動画情報だけを取得
@@ -424,27 +427,62 @@
 
     document.addEventListener('DOMContentLoaded', initData);
 
+// ひらがな→カタカナ変換ヘルパー
+function toKatakana(ch) {
+  const code = ch.charCodeAt(0);
+  // ひらがな範囲(ぁ=0x3041～ゖ=0x3096)のみ変換
+  if (code >= 0x3041 && code <= 0x3096) {
+    return String.fromCharCode(code + 0x60);
+  }
+  return ch;
+}
     /**
      * カナ行ボタンにクリックハンドラを登録し、
      * 押された文字で fishes 配列を絞り込んで
      * 魚ドロップダウンを再描画する
      */
-    function setupKanaButtons() {
-      // ① .kana-buttons 内の <button data-kana="…"> を全取得
-      document.querySelectorAll('.kana-buttons button[data-kana]')
-        .forEach(btn => {
-          btn.addEventListener('click', () => {
-            const kana = btn.dataset.kana;                   // 例: "あ"
-            const filtered = fishes.filter(f => 
-              // 魚名の先頭文字がボタンと同じか
-              f.Name.charAt(0) === kana
-            );
-            populateFishSelect(filtered);                    // ドロップダウン更新
-          });
-        });
-    }
 
-    /**
+     // ひらがなボタン→対象カタカナ文字群マップ
+const KANA_MAP = {
+  "あ": ["ア","イ","ウ","エ","オ"],
+  "か": ["カ","キ","ク","ケ","コ"],
+  "さ": ["サ","シ","ス","セ","ソ"],
+  "た": ["タ","チ","ツ","テ","ト"],
+  "な": ["ナ","ニ","ヌ","ネ","ノ"],
+  "は": ["ハ","ヒ","フ","ヘ","ホ"],
+  "ま": ["マ","ミ","ム","メ","モ"],
+  "や": ["ヤ","ユ","ヨ"],
+  "ら": ["ラ","リ","ル","レ","ロ"],
+  "わ": ["ワ","ヲ"],
+  "全": null  // 全件は special case
+};
+
+function setupKanaButtons(fishes) {
+  document
+    .querySelectorAll('.kana-buttons button[data-kana]')
+    .forEach(btn => {
+      btn.addEventListener('click', () => {
+        const kana = btn.dataset.kana;       // 例: "あ" or "わ" or "全"
+        // 「全」なら全件表示
+        if (kana === "全") {
+          populateFishSelect(fishes);
+          return;
+        }
+        // 対象カタカナ群を取得
+        const targets = KANA_MAP[kana];
+        // 絞り込み
+        const filtered = fishes.filter(f => {
+          const first = f.Name.charAt(0);    // 先頭カタカナ
+          return targets.includes(first);
+        });
+        populateFishSelect(filtered);
+      });
+    });
+}
+
+
+
+     /**
      * グループセレクトボックスを初期化する
      * @param {Array<{groupId: number, nameJp: string}>} allGroups
      */
