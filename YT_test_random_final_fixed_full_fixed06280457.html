@@ -136,28 +136,7 @@
 }
 */
 
-/* ① フィルター群を横並びに */
-#filters {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;  /* 折り返しが不要なら削除可 */
-}
-
-/* ② セレクト＋Cボタンをインラインで */
-.select-clear-wrapper {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* ③ セレクトは自動幅 or 任意の最小幅 */
-.select-clear-wrapper select {
-  width: auto;         /* 元に戻す */
-  min-width: 120px;    /* お好みで */
-}
-
-    
+   
     #fishIcon {
       width: 150px;
       height: 150px;
@@ -311,6 +290,27 @@
   box-sizing: border-box;  /* padding込みで幅を計算 */
 }
 
+
+/* ② セレクト＋Cボタンをインラインで */
+.select-clear-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ③ セレクトは自動幅 or 任意の最小幅 */
+.select-clear-wrapper select,
+.select-clear-wrapper select[size] {
+  width: auto !important;         /* 元に戻す */
+  min-width: 120px !important;    /* お好みで */
+}
+
+/* ── ドロップアップ開時のリストにも幅を担保 ── */
+.dropup select[size] {
+  width: auto !important;
+  min-width: 120px !important;
+}
+
 /* セレクト群を横並びにする（既存のまま） */
 #filters {
   display: flex;
@@ -319,15 +319,11 @@
   gap: 0.5rem;             /* 行間の余白 */
 }
 
-/* 各コンボボックス＋Cボタンをインラインに */
-.select-clear-wrapper {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.select-clear-wrapper select {
-  width: auto;
-  min-width: 120px;
+/* ← 既存の override より下、<style>の最後に追記 */
+.select-clear-wrapper.dropup select[size],
+.dropup.select-clear-wrapper select[size] {
+  width: auto !important;
+  min-width: 120px !important;
 }
 
 
@@ -393,8 +389,8 @@
       
       <!-- フィルターセレクトボックス -->
       <div id="filters">
-        <span class="select-clear-wrapper">
-          <select id="fishSelect">
+        <span class="select-clear-wrapper dropup">
+          <select id="fishSelect" class="selectpicker">
            <option value="">魚を選択</option>
           </select>
            <button type="button" class="clear-btn" data-target="fishSelect">C</button>  
@@ -540,6 +536,16 @@ let currentLetter = "";
       // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
       renderIconBar();
       console.log('videoIds:', videoIds);
+      
+      // ── 追加: Cボタンで該当セレクトをクリア ──
+      document.querySelectorAll('.clear-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sel = document.getElementById(btn.dataset.target);
+          sel.value = '';                     // 選択解除
+          sel.dispatchEvent(new Event('change')); // change イベントを発火
+        });
+      });
+    
       // トグル初期化はここで
       const toggle = document.getElementById("repeatToggle");
       repeatMode = toggle.checked;
@@ -732,6 +738,7 @@ function setupKanaButtons(fishes) {
       // placeholder を含む option の総数を取得
         const totalOptions = sel.options.length;
         sel.size = Math.min(totalOptions, MAX_VISIBLE_ROWS) || 1;
+        sel.style.removeProperty('width');
 
         const restore = () => {
           sel.removeAttribute('size');
