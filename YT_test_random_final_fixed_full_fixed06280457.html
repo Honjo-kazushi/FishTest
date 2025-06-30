@@ -546,6 +546,14 @@ let currentLetter = "";
         });
       });
     
+      // ── 追加: fishSelect変更時にGroupとPlaceをクリア ──
+      const fishSel = document.getElementById('fishSelect');
+      fishSel.addEventListener('change', () => {
+        document.getElementById('groupSelect').value = '';
+        document.getElementById('placeSelect').value = '';
+      // 必要に応じてUI更新／動画の再キュー処理をここで呼び出し
+      });
+    
       // トグル初期化はここで
       const toggle = document.getElementById("repeatToggle");
       repeatMode = toggle.checked;
@@ -688,6 +696,9 @@ function setupKanaButtons(fishes) {
 
       // 4) 選択が変わったら動画を再読み込みしてアイコンバーを再描画
       sel.addEventListener('change', async (e) => {
+      // 【修正】fishSelect の選択だけクリア（プログラム的な change 発火はしない）
+        const fishSel = document.getElementById('fishSelect');
+        fishSel.value = '';
         // 選ばれた groupId をグローバルにセット
         currentGroupId = Number(e.target.value);
         // 新しい動画一覧だけをフェッチ
@@ -696,8 +707,8 @@ function setupKanaButtons(fishes) {
         // アイコンバーを最新の動画情報で更新
         renderIconBar();
       });
-    }
-
+     }
+   
     function populatePlaceSelect(list) {
       const sel = document.getElementById('placeSelect');
       sel.innerHTML = '<option value="">全場所</option>';
@@ -709,7 +720,12 @@ function setupKanaButtons(fishes) {
         sel.appendChild(opt);
       });
       // 変更→アイコンバー再描画
-      sel.addEventListener('change', () => renderIconBar());
+      sel.addEventListener('change', () => {
+      // 【追加】Place変更時は fishSelect をクリア
+        const fishSel = document.getElementById('fishSelect');
+        fishSel.value = '';
+        renderIconBar();
+      });
     }
 
     function populateFishSelect(list) {
