@@ -10,6 +10,7 @@
       margin: 0;
       background: #eef6fb;
     }
+
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -135,6 +136,27 @@
 }
 */
 
+/* ① フィルター群を横並びに */
+#filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;  /* 折り返しが不要なら削除可 */
+}
+
+/* ② セレクト＋Cボタンをインラインで */
+.select-clear-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ③ セレクトは自動幅 or 任意の最小幅 */
+.select-clear-wrapper select {
+  width: auto;         /* 元に戻す */
+  min-width: 120px;    /* お好みで */
+}
+
     
     #fishIcon {
       width: 150px;
@@ -223,19 +245,21 @@
   flex: 1;                 /* 残り幅を占有 */
 }
 
+
 /* ▼ フィルターパネルを縦並び・左詰めに */
-.filter-panel.small {
+/*.filter-panel.small {
   display: flex;
   flex-direction: column;
   align-items: stretch;  /* ← 追加 */
-  justify-content: flex-start;    /* 項目を上詰めに */
-  gap: 0.5rem;
+  /*justify-content: flex-start;    /* 項目を上詰めに */
+  /*gap: 0.5rem;
   margin: 0.5rem 0 2rem;
   width: 100%;             /* お好みで */
-  max-width: none;  /* 固定幅の解除 */
-  box-sizing: border-box;
+  /*max-width: none;  /* 固定幅の解除 */
+  /*box-sizing: border-box;
   margin-bottom: 0.2rem;  /* 任意で調整：仲間選択とアイコン群の垂直間隔 */
-}
+ 
+/*}
 
 /* select 自体を100%幅に */
 /*.filter-panel.small {
@@ -243,12 +267,12 @@
 }
 */
 
-.filter-panel.small select {
+/*.filter-panel.small select {
   width: 100% !important;
   max-width: none;
   box-sizing: border-box; /* padding 分も含めて幅計算 */
-  display: block;          /* ブロック要素にしておくと縦並びが安定します */
-  margin: 0;
+  /*display: block;          /* ブロック要素にしておくと縦並びが安定します */
+  /*margin: 0;
 }
 #fishSelect {
   display: block !important;
@@ -256,7 +280,7 @@
   max-width: 100% !important;
   box-sizing: border-box;
   /* padding はそのまま効かせたいならこのままでOK */
-}
+/*}
 
 #placeSelect {
   display: block !important;
@@ -264,7 +288,7 @@
   max-width: 100% !important;
   box-sizing: border-box;
   /* padding はそのまま効かせたいならこのままでOK */
-}
+/*}
 
 #groupSelect {
   display: block !important;
@@ -272,9 +296,43 @@
   max-width: 100% !important;
   box-sizing: border-box;
   /* padding はそのまま効かせたいならこのままでOK */
+/*}
+ */
+
+/* ── ここから下を“既存のすべての /*…*/ コメント”よりも後に置いてください ── */
+/* フィルターパネル全体を縦積みかつ左パネル幅いっぱいに広げる */
+.filter-panel.small {
+  display: flex;
+  flex-direction: column;  /* 上：かなボタン、下：セレクト群 */
+  gap: 0.5rem;             /* ブロック間の縦間隔 */
+  align-items: flex-start;   /* ← ここで左寄せ */
+  margin: 1rem 0;          /* 前後の余白 */
+  width: 100%;             /* 左パネル内で横幅100% */
+  box-sizing: border-box;  /* padding込みで幅を計算 */
 }
 
-  /* 既存のスタイル */
+/* セレクト群を横並びにする（既存のまま） */
+#filters {
+  display: flex;
+  flex-direction: column;  /* 縦並び */
+  align-items: flex-start;   /* ← 左寄せ */
+  gap: 0.5rem;             /* 行間の余白 */
+}
+
+/* 各コンボボックス＋Cボタンをインラインに */
+.select-clear-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.select-clear-wrapper select {
+  width: auto;
+  min-width: 120px;
+}
+
+
+
+ /* 既存のスタイル */
 
   /* ドロップアップ仕様：fishSelect が size 属性付きのとき上に展開 */
  .dropup {
@@ -332,25 +390,32 @@
         <button data-kana="わ">わ</button>
         <button data-kana="全">全</button>
       </div>
-      <div class="dropup">
-        <select id="fishSelect">
-          <option value="">魚を選択</option>
-        </select>
+      
+      <!-- フィルターセレクトボックス -->
+      <div id="filters">
+        <span class="select-clear-wrapper">
+          <select id="fishSelect">
+           <option value="">魚を選択</option>
+          </select>
+           <button type="button" class="clear-btn" data-target="fishSelect">C</button>  
+        </span>
+        <span class="select-clear-wrapper">
+          <select id="placeSelect">
+           <option value="">場所を選択</option>
+          </select>
+           <button type="button" class="clear-btn" data-target="placeSelect">C</button>
+        </span>
+        <span class="select-clear-wrapper">
+          <select id="groupSelect">
+           <option value="">仲間を選択</option>
+          </select>
+           <button type="button" class="clear-btn" data-target="groupSelect">C</button>
+        </span>
       </div>
-      <div>
-        <select id="placeSelect">
-          <option value="">場所を選択</option>
-        </select>
-      </div>
-      <div>
-        <select id="groupSelect">
-          <option value="">仲間を選択</option>
-        </select>
-      </div>
+     </div>
     </div>
-    </div>    
 
-    <div class="right-panel">
+  <div class="right-panel">
 
     <div id="playerContainer" style="position: relative;">
       <div id="player"></div>
@@ -372,7 +437,7 @@
   <button onclick="playVideo()">再生</button>
   <button onclick="nextVideo()">次へ</button>
   <button onclick="nextGroup()">次Gr</button>
-</div>
+  </div>
       <div class="video-meta">
         <div><strong>場所:</strong> <span id="videoPlace"></span></div>
         <div><strong>年:</strong> <span id="videoYear"></span></div>
@@ -380,10 +445,12 @@
       </div>
     </div>
 
-
-
   </div>
   <div class="icon-bar" id="iconBar"></div>
+ </div>
+</div>
+
+</body>
 
   <script>
     const MAX_GROUP = 56;
@@ -1054,7 +1121,6 @@ function prevVideo() {
         console.error("prevGroup fetch error:", err);
       }
     }
-
 
 </script>
   
