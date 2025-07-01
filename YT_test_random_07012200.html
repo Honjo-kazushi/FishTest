@@ -542,9 +542,13 @@ let currentLetter = "";
       // ── 追加: Cボタンで該当セレクトをクリア ──
       document.querySelectorAll('.clear-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const sel = document.getElementById(btn.dataset.target);
+          const targetId = btn.dataset.target;
+          const sel = document.getElementById(targetId);
           sel.value = '';                     // 選択解除
-          sel.dispatchEvent(new Event('change')); // change イベントを発火
+          // 2) グループ選択以外はこれまでどおり change を飛ばす
+          if (targetId !== 'groupSelect') {
+            sel.dispatchEvent(new Event('change')); // change イベントを発火
+          }
         });
       });
     
@@ -561,6 +565,7 @@ let currentLetter = "";
       repeatMode = toggle.checked;
       toggle.addEventListener("change", () => {
       repeatMode = toggle.checked;
+      console.log("▶︎ repeatToggle changed:", repeatMode ? "ON" : "OFF");
       });
 
       // 初期表示：選択中のグループの先頭魚情報を取得
@@ -649,7 +654,8 @@ function setupKanaButtons(fishes) {
      * @param {Array<{groupId: number, nameJp: string}>} allGroups
      */
     function populateGroupSelect(allGroups) {
-      // 1) セレクト要素を取得
+      console.log("→ populateGroupSelect()", { repeatMode, currentGroupId });
+        // 1) セレクト要素を取得
       const sel = document.getElementById('groupSelect');
       // 2) 既存の<option>をクリアして、デフォルト「全グループ」を追加
       sel.innerHTML = '<option value="">全グループ</option>';
@@ -696,38 +702,39 @@ function setupKanaButtons(fishes) {
         sel.appendChild(opt);
       });*/
 
-      // 4) 選択が変わったら動画を再読み込みしてアイコンバーを再描画
-      sel.addEventListener('change', async (e) => {
-      // 【修正】fishSelect の選択だけクリア（プログラム的な change 発火はしない）
-        const fishSel = document.getElementById('fishSelect');
-        fishSel.value = '';
-        // 選ばれた groupId をグローバルにセット
-        currentGroupId = Number(e.target.value);
-        // 新しい動画一覧だけをフェッチ
-        videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${currentGroupId}`)
-                         .then(res => res.json());
-        // アイコンバーを最新の動画情報で更新
-        renderIconBar();
-    
-        // （1）グループ固定モードに切り替え
-        isGroupFixed = true;
-      
-        if (repeatMode && videos.length) {
-           // 1) 再生キュー情報を準備
-           currentVideoIds   = videos.map(v => v.youtubeId);
-           currentVideoIndex = 0;
-           // 3) 新しい動画をロード＆再生
-           const firstId = currentVideoIds[0];
-           ytPlayer.loadVideoById(firstId);
-           ytPlayer.playVideo();
-          // 4) 画面も即更新
-           const fish = fishes.find(f => f.FishID === videos[0].FishID);
-           if (fish) updateFishInfo(fish);
-             updateVideoMeta(videos[0]);
-          }  
-         }
-        );
-       }
+         sel.addEventListener('change', async (e) => {
+        // 手動グループ選択時は fishSelect をクリア
+         document.getElementById('fishSelect').value = '';
+         currentGroupId = Number(e.target.value);
+        // 新グループの動画リスト取得
+         videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${currentGroupId}`)
+                    .then(res => res.json());
+        // 動画キューを必ず更新
+         videoIds = videos.map(v => ({
+         videoId: extractVideoId(v.YouTubeURL),
+           fishId:  v.FishID
+         }));
+         currentIndex = 0;
+         renderIconBar();
+         isGroupFixed = true;
+
+         // 先頭動画を再生
+         if (repeatMode) {
+           currentIndex = 0;
+           const entry = videoIds[0];
+           const vid   = entry.videoId;
+           if (vid) {
+             ytPlayer.loadVideoById(vid);
+             ytPlayer.playVideo();
+           }
+           // 表示情報の更新
+           const fishMeta = fishes.find(f => f.FishID === entry.fishId);
+           if (fishMeta) updateFishInfo(fishMeta);
+           const meta = videos.find(v => extractVideoId(v.YouTubeURL) === entry.videoId);
+           if (meta) updateVideoMeta(meta);
+        }
+       });
+      }
         
    
     function populatePlaceSelect(list) {
@@ -964,6 +971,12 @@ function onPlayerStateChange(event) {
   switch (event.data) {
     case YT.PlayerState.ENDED:
     
+     // ── 先にガードしておく ──
+      if (!videoIds[currentIndex]) {
+        console.warn('no entry at index', currentIndex, 'queue=', videoIds);
+        return;
+      }
+
     console.log(
       '[onPlayerStateChange] ENDED fired',
       'repeatMode=', repeatMode,
@@ -1087,7 +1100,8 @@ function prevVideo() {
 }
 
     async function nextGroup() {
-      // 「次グループ再生」が呼ばれたらグループ固定モードを解除
+      console.log("→ nextGroup()", { repeatMode, currentGroupId, currentIndex });
+        // 「次グループ再生」が呼ばれたらグループ固定モードを解除
       isGroupFixed = false;
       console.log(`[nextGroup] called with play=${repeatMode}, fromGroup=${currentGroupId}`);
       // 1) グループIDをインクリメント（最大を超えたら 1 に戻す）
