@@ -459,6 +459,8 @@
     let ytPlayer;
     let currentIndex = 0;
     let lastPlayerState = null;
+    let isGroupFixed = false;    // 手動でグループ選択されたら true
+
    
     //
     const PLACES = [
@@ -706,8 +708,27 @@ function setupKanaButtons(fishes) {
                          .then(res => res.json());
         // アイコンバーを最新の動画情報で更新
         renderIconBar();
-      });
-     }
+    
+        // （1）グループ固定モードに切り替え
+        isGroupFixed = true;
+      
+        if (repeatMode && videos.length) {
+           // 1) 再生キュー情報を準備
+           currentVideoIds   = videos.map(v => v.youtubeId);
+           currentVideoIndex = 0;
+           // 3) 新しい動画をロード＆再生
+           const firstId = currentVideoIds[0];
+           ytPlayer.loadVideoById(firstId);
+           ytPlayer.playVideo();
+          // 4) 画面も即更新
+           const fish = fishes.find(f => f.FishID === videos[0].FishID);
+           if (fish) updateFishInfo(fish);
+             updateVideoMeta(videos[0]);
+          }  
+         }
+        );
+       }
+        
    
     function populatePlaceSelect(list) {
       const sel = document.getElementById('placeSelect');
@@ -956,8 +977,15 @@ function onPlayerStateChange(event) {
           // 同グループ内の次動画へ
           nextVideo();
         } else {
-          // 最後の動画 → 次グループを自動再生
-          nextGroup(true);
+          // ── 手動選択時固定モードなら同グループ頭に戻す ──
+          if (isGroupFixed) {
+              currentIndex = 0;
+              const entry0 = videoIds[0];
+              playVideoByFish(entry0.fishId, entry0.videoId);
+            } else {
+              // 通常モード：次グループへ
+              nextGroup();
+            }  
         }
       } else {
         // repeatMode OFF → オーバーレイ表示のみ
@@ -970,6 +998,19 @@ function onPlayerStateChange(event) {
       // 再生開始 → オーバーレイを隠す
       overlay.style.display = 'none';
       overlay.style.opacity = '0';
+      // ── 追加：再生開始時にメタ情報を更新 ──
+      // currentIndex は現在再生中のインデックス
+      const entry = videoIds[currentIndex];
+      // fishes と videos はグローバル変数
+      const fish  = fishes.find(f => f.FishID === entry.fishId);
+      const video = videos.find(v =>
+        v.FishID === entry.fishId &&
+        extractVideoId(v.YouTubeURL) === entry.videoId
+      );
+      if (fish && video) {
+        updateFishInfo(fish);
+        updateVideoMeta(video);
+      }
       break;
 
     case YT.PlayerState.UNSTARTED:
@@ -1046,6 +1087,8 @@ function prevVideo() {
 }
 
     async function nextGroup() {
+      // 「次グループ再生」が呼ばれたらグループ固定モードを解除
+      isGroupFixed = false;
       console.log(`[nextGroup] called with play=${repeatMode}, fromGroup=${currentGroupId}`);
       // 1) グループIDをインクリメント（最大を超えたら 1 に戻す）
       currentGroupId = currentGroupId < MAX_GROUP ? currentGroupId + 1 : 1;
