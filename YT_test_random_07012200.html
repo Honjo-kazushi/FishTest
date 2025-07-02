@@ -820,7 +820,11 @@ function setupKanaButtons(fishes) {
             }));
           }
  
-        // 4) アイコンバー再描画→メタ更新→再生 or キュー
+          // ── 追加：選択魚だけの動画に絞り込み & インデックス初期化 ──
+          videoIds = videoIds.filter(v => v.fishId === fishId);
+          currentIndex = 0;
+      
+          // 4) アイコンバー再描画→メタ更新→再生 or キュー
           renderIconBar();
           updateFishInfo(fishObj);
           const entry = videoIds.find(v => v.fishId === fishId);
@@ -945,12 +949,13 @@ function renderIconBar() {
     bar.appendChild(wrapper);
 
   });
-    // アイコンバー再描画後、動画IDリストを更新
-    videoIds = videos.map(v => ({
-    fishId: v.FishID,
-    videoId: extractVideoId(v.YouTubeURL)
-  }));
-}
+    // 動画IDリストの更新は fishSelect 未選択時のみ行う
+    if (!document.getElementById('fishSelect').value) {
+      videoIds = videos.map(v => ({
+        fishId: v.FishID,
+        videoId: extractVideoId(v.YouTubeURL)
+      }));
+   }}
 
     function getRandomGroupId() {
       return Math.floor(Math.random() * MAX_GROUP) + 1;
