@@ -792,6 +792,52 @@ function setupKanaButtons(fishes) {
         sel.addEventListener('change', restore);
         sel.addEventListener('blur', restore);
       }
+        // ── 追加：魚選択 change 時の一連処理 ──
+        let fishSel = document.getElementById('fishSelect');
+        // 既存の匿名リスナは削除している想定
+        fishSel.replaceWith(fishSel.cloneNode(true));
+        fishSel = document.getElementById('fishSelect'); // 再代入
+        fishSel.addEventListener('change', async e => {
+        // 1) フィルタクリア
+          document.getElementById('groupSelect').value = '';
+          document.getElementById('placeSelect').value = '';
+
+        // 2) 選択魚→グループ判定
+          const fishId = Number(e.target.value);
+          const fishObj = fishes.find(f => f.FishID === fishId);
+          if (!fishObj) return;
+          const groupId = fishObj.GroupID;
+
+        // 3) グループが変わっていたら動画を再取得
+          if (groupId !== currentGroupId) {
+            currentGroupId = groupId;
+            videos = await fetch(
+              `${BASE_API_URL}?action=listVideosByGroup&groupId=${groupId}`
+            ).then(r=>r.json()).catch(()=>[]);
+            videoIds = videos.map(v => ({
+              fishId:  v.FishID,
+              videoId: extractVideoId(v.YouTubeURL)
+            }));
+          }
+ 
+        // 4) アイコンバー再描画→メタ更新→再生 or キュー
+          renderIconBar();
+          updateFishInfo(fishObj);
+          const entry = videoIds.find(v => v.fishId === fishId);
+          if (entry) {
+            const meta = videos.find(v =>
+              extractVideoId(v.YouTubeURL) === entry.videoId
+             );
+            if (repeatMode) {
+              ytPlayer.loadVideoById(entry.videoId);
+              ytPlayer.playVideo();
+            } else {
+              ytPlayer.cueVideoById(entry.videoId);
+            }
+            if (meta) updateVideoMeta(meta);
+          }
+          isGroupFixed = true;
+        });
     }
 
     function onGroupChange(e) {
@@ -877,8 +923,15 @@ function renderIconBar() {
     img.alt = fish.Name;
     img.classList.add('fish-icon');
     img.addEventListener('click', () => {
-      document.getElementById('fishSelect').value = fid;
-      onFishSelect({ target: { value: fid } });
+
+    const fishSel = document.getElementById('fishSelect');
+    const selectedFish = fishSel.value;
+    const place = document.getElementById('placeSelect').value;
+    // 魚未選択かつ場所フィルタで非該当（灰色）の場合は無視
+    if (!selectedFish && place && entry.撮影場所 !== place) return;
+    // fishSelect にセットして change 発火
+    fishSel.value = fid;
+    fishSel.dispatchEvent(new Event('change'));
     });
     wrapper.appendChild(img);
 
