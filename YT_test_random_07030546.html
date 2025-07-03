@@ -389,7 +389,7 @@
       
       <!-- フィルターセレクトボックス -->
       <div id="filters">
-        <span class="select-clear-wrapper dropup">
+        <span class="select-clear-wrapper">
           <select id="fishSelect" class="selectpicker">
            <option value="">魚を選択</option>
           </select>
@@ -776,23 +776,6 @@ function setupKanaButtons(fishes) {
         sel.appendChild(opt);
       });
     
-      // フィルタ文字があるとき（＝あ〜わボタン押下時）のみ自動オープン
-     if (currentLetter) {
-        sel.focus();
-        const MAX_VISIBLE_ROWS = 8;
-      // placeholder を含む option の総数を取得
-        const totalOptions = sel.options.length;
-        sel.size = Math.min(totalOptions, MAX_VISIBLE_ROWS) || 1;
-        sel.style.removeProperty('width');
-
-        const restore = () => {
-          sel.removeAttribute('size');
-          sel.removeEventListener('change', restore);
-          sel.removeEventListener('blur', restore);
-        };
-        sel.addEventListener('change', restore);
-        sel.addEventListener('blur', restore);
-      }
         // ── 追加：魚選択 change 時の一連処理 ──
         let fishSel = document.getElementById('fishSelect');
         // 既存の匿名リスナは削除している想定
