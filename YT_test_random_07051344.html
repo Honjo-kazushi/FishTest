@@ -468,7 +468,67 @@
     let lastPlayerState = null;
     let isGroupFixed = false;    // 手動でグループ選択されたら true
 
-   
+     /** @type {{groupId:number,nameJp:string}[]} */
+  const GROUPS = [
+  { groupId: 0,nameJp: "他の分類" },
+  { groupId: 1,nameJp: "スズメダイ" },
+  { groupId: 2,nameJp: "テンジクダイ" },
+  { groupId: 3,nameJp: "サメ・イルカ" },
+  { groupId: 4,nameJp: "エイ" },
+  { groupId: 5,nameJp: "ウツボ" },
+  { groupId: 6,nameJp: "アナゴ・ヘビ" },
+  { groupId: 7,nameJp: "エソ" },
+  { groupId: 8,nameJp: "ゴンズイ" },
+  { groupId: 9,nameJp: "カサゴ・オコゼ" },
+  { groupId: 10,nameJp: "ハタ" },
+  { groupId: 11,nameJp: "アジ" },
+  { groupId: 12,nameJp: "フエダイ" },
+  { groupId: 13,nameJp: "ハタンポ" },
+  { groupId: 14,nameJp: "フエフキダイ" },
+  { groupId: 15,nameJp: "イトヨリダイ" },
+  { groupId: 16,nameJp: "タカサゴ" },
+  { groupId: 17,nameJp: "イサキ" },
+  { groupId: 18,nameJp: "ヒメジ" },
+  { groupId: 19,nameJp: "タカノハダイ" },
+  { groupId: 20,nameJp: "チョウチョウウオ" },
+  { groupId: 21,nameJp: "キンチャクダイ" },
+  { groupId: 22,nameJp: "タイ・ブダイ" },
+  { groupId: 23,nameJp: "ゴンベ" },
+  { groupId: 24,nameJp: "クマノミ" },
+  { groupId: 25,nameJp: "ベラ" },
+  { groupId: 26,nameJp: "ギンポ" },
+  { groupId: 27,nameJp: "ハゼ" },
+  { groupId: 28,nameJp: "ツノダシ" },
+  { groupId: 29,nameJp: "ツバメウオ" },
+  { groupId: 30,nameJp: "アイゴ" },
+  { groupId: 31,nameJp: "ハギ" },
+  { groupId: 32,nameJp: "カマス" },
+  { groupId: 33,nameJp: "マグロ" },
+  { groupId: 34,nameJp: "カレイ・ヒラメ" },
+  { groupId: 35,nameJp: "カワハギ" },
+  { groupId: 36,nameJp: "フグ" },
+  { groupId: 37,nameJp: "カニ・エビ" },
+  { groupId: 38,nameJp: "ウミウシ" },
+  { groupId: 39,nameJp: "不明" },
+  { groupId: 40,nameJp: "カメ" },
+  { groupId: 41,nameJp: "イットウダイ" },
+  { groupId: 42,nameJp: "ハナダイ" },
+  { groupId: 43,nameJp: "イカ・タコ" },
+  { groupId: 44,nameJp: "ヘラヤガラ・ヘコアユ" },
+  { groupId: 45,nameJp: "ニシン" },
+  { groupId: 46,nameJp: "メジナ" },
+  { groupId: 47,nameJp: "ニベ" },
+  { groupId: 48,nameJp: "ダンゴウオ" },
+  { groupId: 49,nameJp: "スズキ" },
+  { groupId: 50,nameJp: "ダイジェスト" },
+  { groupId: 51,nameJp: "アミ" },
+  { groupId: 52,nameJp: "ボラ" },
+  { groupId: 53,nameJp: "マトウダイ" },
+  { groupId: 54,nameJp: "キス" },
+  { groupId: 55,nameJp: "キツネアマダイ" },
+  { groupId: 56,nameJp: "クラゲ" }
+  ];
+
     //
     const PLACES = [
       "羽尾",
@@ -502,12 +562,16 @@ console.time('fetchFishes');
                       .then(res => res.json());
 console.timeEnd('fetchFishes');
       
-console.time('fetchGroups');
+//console.time('fetchGroups');
       // 2) グループ一覧を取得してドロップダウンに反映
-      const allGroups = await fetch(`${BASE_API_URL}?action=listGroups`)
-                                .then(res => res.json());
-console.timeEnd('fetchGroups');
-      populateGroupSelect(allGroups);
+//      const allGroups = await fetch(`${BASE_API_URL}?action=listGroups`)
+//                                .then(res => res.json());
+//console.timeEnd('fetchGroups');
+//      populateGroupSelect(allGroups);
+      // グループ一覧は静的配列から即時取得
+        console.log('loadStaticGroups', GROUPS.length, 'groups');
+        populateGroupSelect(GROUPS);
+
       // 3) 五十音ボタンを初期化
       setupKanaButtons(fishes);
       // 4) 撮影場所一覧を取得してドロップダウンに反映
