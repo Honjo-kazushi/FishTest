@@ -301,7 +301,7 @@
 /* ③ セレクトは自動幅 or 任意の最小幅 */
 .select-clear-wrapper select,
 .select-clear-wrapper select[size] {
-  width: auto !important;         /* 元に戻す */
+  width: 200px !important;         /* 元に戻す */
   min-width: 120px !important;    /* お好みで */
 }
 
@@ -344,7 +344,14 @@
    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
  }
 
-
+/* ── kana-buttons 押された見た目 ── */
+.kana-buttons button {
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+.kana-buttons button.active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.3);
+  transform: translateY(2px);
+}
 
 </style>
 </head>
@@ -634,27 +641,29 @@ const KANA_MAP = {
 };
 
 function setupKanaButtons(fishes) {
-  document
-    .querySelectorAll('.kana-buttons button[data-kana]')
-    .forEach(btn => {
-      btn.addEventListener('click', () => {
-        const kana = btn.dataset.kana;       // 例: "あ" or "わ" or "全"
-        currentLetter = (kana === "全" ? "" : kana);
-        // 「全」なら全件表示
-        if (kana === "全") {
-          populateFishSelect(fishes);
-          return;
-        }
-        // 対象カタカナ群を取得
+  const buttons = document.querySelectorAll('.kana-buttons button[data-kana]');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const kana = btn.dataset.kana;
+
+      // 同ボタン連打は無視
+      if (kana !== '全' && btn.classList.contains('active')) return;
+
+      // まず全ボタンの active をクリア
+      buttons.forEach(b => b.classList.remove('active'));
+
+      if (kana === '全') {
+        // 全押し：全件表示
+        populateFishSelect(fishes);
+      } else {
+        // 特定行押し：そのボタンだけ active にして絞り込み
+        btn.classList.add('active');
         const targets = KANA_MAP[kana];
-        // 絞り込み
-        const filtered = fishes.filter(f => {
-          const first = f.Name.charAt(0);    // 先頭カタカナ
-          return targets.includes(first);
-        });
+        const filtered = fishes.filter(f => targets.includes(f.Name.charAt(0)));
         populateFishSelect(filtered);
-      });
+      }
     });
+  });
 }
 
 
