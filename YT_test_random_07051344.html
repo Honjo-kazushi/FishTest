@@ -455,6 +455,8 @@
 
 </body>
 
+<script src="./js/fishesData.js"></script>
+
   <script>
     const MAX_GROUP = 56;
     //const BASE_API_URL = "https://script.google.com/macros/s/AKfycbx9xS8N0HadBqim2MdMsW-G2HfjJ-hyMzGmSsvOuRlZx1fCJayqMJPsmbRiIcVzUSoX_g/dev";
@@ -556,12 +558,16 @@ let currentLetter = "";
 
     async function initData() {
 console.time('initData_total');
-console.time('fetchFishes');
+//console.time('fetchFishes');
       // 1) 魚メタデータを取得
-      fishes = await fetch(`${BASE_API_URL}?action=listFishes`)
-                      .then(res => res.json());
-console.timeEnd('fetchFishes');
-      
+//      fishes = await fetch(`${BASE_API_URL}?action=listFishes`)
+//                      .then(res => res.json());
+//console.timeEnd('fetchFishes');
+      // 魚データは静的モジュールから即時取得
+      console.time('loadStaticFishes');
+      fishes = FISHES;
+      console.timeEnd('loadStaticFishes');
+
 //console.time('fetchGroups');
       // 2) グループ一覧を取得してドロップダウンに反映
 //      const allGroups = await fetch(`${BASE_API_URL}?action=listGroups`)
@@ -569,8 +575,8 @@ console.timeEnd('fetchFishes');
 //console.timeEnd('fetchGroups');
 //      populateGroupSelect(allGroups);
       // グループ一覧は静的配列から即時取得
-        console.log('loadStaticGroups', GROUPS.length, 'groups');
-        populateGroupSelect(GROUPS);
+      console.log('loadStaticGroups', GROUPS.length, 'groups');
+      populateGroupSelect(GROUPS);
 
       // 3) 五十音ボタンを初期化
       setupKanaButtons(fishes);
