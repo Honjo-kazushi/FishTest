@@ -809,13 +809,15 @@ function setupKanaButtons(fishes) {
         // isGroupFixed = true;
 
          // 先頭動画を再生
-         if (repeatMode) {
            currentIndex = 0;
            const entry = videoIds[0];
+         if (entry) {
            const vid   = entry.videoId;
-           if (vid) {
+           if (repeatMode && vid) {
              ytPlayer.loadVideoById(vid);
              ytPlayer.playVideo();
+           } else {
+             ytPlayer.cueVideoById(vid);               
            }
            // 表示情報の更新
            const fishMeta = fishes.find(f => f.FishID === entry.fishId);
@@ -973,7 +975,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 /**
- * #iconBar 内に魚アイコンを並べる
+ * #iconBar 内に魚アイコンを並べる(名前、撮影年、場所順)
  * - videos: 現在のグループの動画リスト（FishID, YouTubeURL,... の配列）
  * - fishes: 全魚メタデータ（FishID, Name, IconURL,... の配列）
  */
@@ -981,32 +983,31 @@ function renderIconBar() {
   const bar = document.getElementById('iconBar');
   bar.innerHTML = '';           // 一旦クリア
   const selectedPlace = document.getElementById('placeSelect').value;
-  const seen = new Set();       // 重複防止セット
 
-  videos.forEach(entry => {
-    const fid = entry.FishID;
-    if (seen.has(fid)) return;  // すでに追加済みなら飛ばす
-    seen.add(fid);
+  // 1) アイコン表示用に、Group 内の魚IDをあーわ順で並べ替え
+  const fishIds = Array.from(new Set(videos.map(v => v.FishID)));
+  const sortedFishIds = fishIds
+    .map(id => fishes.find(f => f.FishID === id))
+    .sort((a, b) => a.Name.localeCompare(b.Name, 'ja'))
+    .map(f => f.FishID)
 
-    // 全魚データから該当 FishID の情報を探す
+  sortedFishIds.forEach(fid => {
     const fish = fishes.find(f => f.FishID === fid);
     if (!fish) return;
 
-    // アイコン＋魚名をまとめるコンテナを作る
     const wrapper = document.createElement('div');
     wrapper.classList.add('fish-icon-wrapper');
 
-    // アイコン
     const img = document.createElement('img');
     img.dataset.fishId = fid;
-    if (selectedPlace) {
-      const atPlace = entry.撮影場所 === selectedPlace;
-      img.src = atPlace ? fish.IconURL : fish.IconInactiveURL;
-    } else {
-      img.src = fish.IconURL;
-    }
+    // 選択場所があれば、その魚に該当場所の動画があるかで色／グレーを切り替え
+    const atPlace = selectedPlace
+      ? videos.some(v => v.FishID === fid && v.撮影場所 === selectedPlace)
+      : true;
+    img.src = atPlace ? fish.IconURL : fish.IconInactiveURL;
     img.alt = fish.Name;
     img.classList.add('fish-icon');
+
     img.addEventListener('click', () => {
 
     const fishSel = document.getElementById('fishSelect');
@@ -1030,14 +1031,29 @@ function renderIconBar() {
     bar.appendChild(wrapper);
 
   });
-    // 動画IDリストの更新は fishSelect 未選択時のみ行う
-    if (!document.getElementById('fishSelect').value) {
-      videoIds = videos.map(v => ({
-        fishId: v.FishID,
-        videoId: extractVideoId(v.YouTubeURL)
-      }));
-   }}
 
+   if (!document.getElementById('fishSelect').value) {
+     const sortedVideos = videos.slice().sort((a, b) => {
+       // 1) 魚名（あーわ順）
+       const fa = fishes.find(f => f.FishID === a.FishID);
+       const fb = fishes.find(f => f.FishID === b.FishID);
+       let cmp = fa.Name.localeCompare(fb.Name, 'ja');
+       if (cmp !== 0) return cmp;
+       // 2) 同じ魚なら撮影年（数値昇順）
+       cmp = Number(a.撮影年) - Number(b.撮影年);
+       if (cmp !== 0) return cmp;
+       // 3) 撮影場所（PLACES 配列の順序）
+       const idxA = PLACES.indexOf(a.撮影場所);
+       const idxB = PLACES.indexOf(b.撮影場所);
+       return idxA - idxB;
+    });
+     videoIds = sortedVideos.map(v => ({
+       fishId: v.FishID,
+       videoId: extractVideoId(v.YouTubeURL)
+    }));
+  }
+ }
+ 
     function getRandomGroupId() {
       return Math.floor(Math.random() * MAX_GROUP) + 1;
     }
@@ -1241,6 +1257,11 @@ function prevVideo() {
     async function nextGroup() {
 console.time('switchGroup_total');
         console.log("→ nextGroup()", { repeatMode, currentGroupId, currentIndex });
+
+        // ■ グループ移動時にコンボボックスの選択をクリア
+      document.getElementById('fishSelect').value = '';
+      document.getElementById('groupSelect').value = '';
+
         // 「次グループ再生」が呼ばれたらグループ固定モードを解除
       isGroupFixed = false;
       console.log(`[nextGroup] called with play=${repeatMode}, fromGroup=${currentGroupId}`);
@@ -1303,6 +1324,11 @@ console.timeEnd('switchGroup_total');
 
       async function prevGroup() {
       console.log('[prevGroup] called, repeatMode=', repeatMode, 'currentGroupId=', currentGroupId);
+
+      // ■ グループ移動時にコンボボックスの選択をクリア
+      document.getElementById('fishSelect').value = '';
+      document.getElementById('groupSelect').value = '';
+
       // 1) グループIDをデクリメント（1 より小さければ MAX_GROUP に戻す）
       currentGroupId = currentGroupId > 1 ? currentGroupId - 1 : MAX_GROUP;
       // 2) 新しいグループの動画一覧を取得
