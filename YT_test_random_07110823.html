@@ -650,7 +650,7 @@ console.timeEnd('initData_total');
       // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
       renderIconBar();
       console.log('videoIds:', videoIds);
-      
+    
       // ── 追加: Cボタンで該当セレクトをクリア ──
       document.querySelectorAll('.clear-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -680,41 +680,32 @@ console.timeEnd('initData_total');
       console.log("▶︎ repeatToggle changed:", repeatMode ? "ON" : "OFF");
       });
 
-      // 初期表示：選択中のグループの先頭魚情報を取得
-      //const selectedGroup = initialGroup;
+      // 初期表示：グループ内の魚名でソートした最初の魚情報を取得
       const selectedGroup = currentGroupId;
+        // 1) グループの動画一覧を抽出
       const groupVideos = videos.filter(v => {
-      const fish = fishes.find(f => f.FishID === v.FishID);
-      return fish && fish.GroupID === selectedGroup;
-    });
+        const fish = fishes.find(f => f.FishID === v.FishID);
+        return fish && fish.GroupID === selectedGroup;
+      });
       if (groupVideos.length > 0) {
-        const firstFishId = groupVideos[0].FishID;
-        const firstFish   = fishes.find(f => f.FishID === firstFishId);
-        const firstVideo  = groupVideos[0];
-       // 情報表示
-        updateFishInfo(firstFish);
-        updateVideoMeta(firstVideo);
-      
-       
-        // ———— 動画を再生せずセットだけしておく ————
-       // ytPlayer.cueVideoById(extractVideoId(firstVideo.YouTubeURL));
-      // 必要に応じて自動再生したい場合は以下をアンコメント
-      //// playVideoByFish(entry.fishId, entry.videoId);
-      
+        // 2) 重複を除いた魚IDリストを魚名順にソート
+        const fishIds = Array.from(new Set(groupVideos.map(v => v.FishID)));
+        fishIds.sort((a, b) => {
+          const fa = fishes.find(f => f.FishID === a);
+          const fb = fishes.find(f => f.FishID === b);
+          return fa.Name.localeCompare(fb.Name, 'ja');
+        });
+        const firstFishId = fishIds[0];
+        // 3) 最初の魚IDに対応する動画を groupVideos から取得
+        const firstVideo = groupVideos.find(v => v.FishID === firstFishId);
+        const firstFish  = fishes.find(f => f.FishID === firstFishId);
+        // 4) UI 更新＆head-cue 用データを準備
+        if (firstFish) updateFishInfo(firstFish);
+        if (firstVideo) updateVideoMeta(firstVideo);
       }
-      
-        // ── オープニング再生が終わるまで待つ ──
-        await startOpeningSequence();
-        // ── 確実に PNG オーバーレイを前面復帰 ──
-        const overlay = document.getElementById('playerOverlay');
-        overlay.style.opacity = '1';
-        return groupVideos;
+      return groupVideos;
     }
 
-      // ページ読み込みと同時に initData() をキックオフ
-      const dataPromise = initData();
-  
-      //document.addEventListener('DOMContentLoaded', initData);
 
 // ひらがな→カタカナ変換ヘルパー
 function toKatakana(ch) {
@@ -1012,12 +1003,31 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady() {
-   // initData() の完了（＝データ取得＋オープニング終了）を待って頭出し
-   dataPromise.then(groupVideos => {
-     if (!groupVideos || !groupVideos.length) return;
-     const vid = extractVideoId(groupVideos[0].YouTubeURL);
-     ytPlayer.cueVideoById(vid);
-   });
+  const overlay = document.getElementById('playerOverlay');
+  const player  = document.getElementById('player');
+
+  // ① オーバーレイを隠してプレイヤー表示 → オープニング再生キック
+  overlay.style.opacity = '0';
+  player.style.opacity  = '1';
+   // ① オープニング再生をキック（Promise を取得）
+   const openerPromise = startOpeningSequence();
+   // ② 同時に魚データ取得をキック
+   const dataPromise   = initData();
+
+   // ③ 両方終わったら一度だけ【PNGオーバーレイ→魚動画頭出し】
+   Promise.all([openerPromise, dataPromise]).then(([, groupVideos]) => {
+    if (groupVideos && groupVideos.length > 0) {
+     // a) オーバーレイ復帰
+     overlay.style.opacity = '1';
+     // b) 魚メタ情報を更新
+     const first = groupVideos[0];
+     const fishMeta = fishes.find(f => f.FishID === first.FishID);
+     if (fishMeta) updateFishInfo(fishMeta);
+     updateVideoMeta(first);
+     // c) 魚ビデオを「頭出し」でセット（再生ボタン待ち）
+     ytPlayer.cueVideoById(extractVideoId(first.YouTubeURL));
+    }
+  });
 }
 
 /**
@@ -1423,50 +1433,26 @@ console.timeEnd('switchGroup_total');
  */
 function startOpeningSequence() {
   return new Promise(resolve => {
+    const overlay = document.getElementById('playerOverlay');
+    const player  = document.getElementById('player');
     const openerId = 'U-lKvSfwCPA';
-    const overlay  = document.getElementById('playerOverlay');
-    const player   = document.getElementById('player');
-
-    // PNG隠蔽してオープニング再生
-    //overlay.style.display = 'none';
-    // PNGをフェードアウトしてオープニング再生
-    //overlay.style.opacity = '0';
-    // オーバーレイ非表示＆プレイヤー表示
-    overlay.style.opacity = '0';
-    player.style.opacity  = '1';
-
     ytPlayer.loadVideoById(openerId);
     ytPlayer.playVideo();
-
-    // 再生終了を IFrame API のイベントで検出
-function onOpenerEnd(event) {
-     if (event.data === YT.PlayerState.ENDED) {
-       ytPlayer.removeEventListener('onStateChange', onOpenerEnd);
-       ytPlayer.stopVideo();
-       overlay.style.opacity = '1';
-       // プレイヤーは再び隠す
-       //player.style.opacity  = '1';
-       resolve();
-     }
-   }
-   ytPlayer.addEventListener('onStateChange', onOpenerEnd);
-
-   // 5秒後に停止し PNG 表示へ戻す
-    //setTimeout(() => {
-    //  ytPlayer.stopVideo();
-    //  overlay.src           = 'https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/FishpediaTitle.png';
-    //  //overlay.style.display = 'block';
-    //  //overlay.style.opacity = '1';
-    //  // opacity のみでフェードイン
-    //  //overlay.style.opacity = '1';
-    //  // PNG を再表示＆プレイヤーを隠す
-    //  overlay.style.opacity = '1';
-    //  player.style.opacity  = '1';
-
-    //  resolve();
-    //}, 5000);
+    function onEnd(e) {
+      if (e.data === YT.PlayerState.ENDED) {
+        ytPlayer.removeEventListener('onStateChange', onEnd);
+        ytPlayer.stopVideo();
+        
+         overlay.style.display = 'block';
+         overlay.style.opacity = '1';
+        //player.style.opacity  = '0';
+        resolve();
+      }
+    }
+    ytPlayer.addEventListener('onStateChange', onEnd);
   });
 }
+
 
 
 </script>
