@@ -3176,7 +3176,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "アオウミウシ",
     "英名": "Blue seaslug",
-    "特徴": "",
+    "特徴": "体長は2～5cm程度で、鮮やかな青い体色に黄色の細い縦線が数本走り、橙色の触角と鰓が美しく映える。浅い岩礁域や潮間帯下部、水深数メートルまでの海藻の間などに生息し、主に海綿を食べて暮らしている。色彩が非常に美しいためダイバーにも人気が高く、海中でひときわ目立つ存在である。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%A2%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%A2%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3186,7 +3186,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "アカテンイロウミウシ",
     "英名": "Blood-spotted Ardeadoris",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、白っぽい体色に赤い斑点が多数散らばり、外套膜の縁には紫や橙色の帯が走る。触角と鰓は橙色で鮮やかさが際立つ。浅い岩礁域やサンゴ礁域、水深数メートルの場所に生息し、海綿を主な餌とする。赤い斑点模様が美しく、海中で目立つことからダイバーにも人気があるウミウシの一種。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%A2%E3%82%AB%E3%83%86%E3%83%B3%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%A2%E3%82%AB%E3%83%86%E3%83%B3%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3206,7 +3206,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "イガグリウミウシ",
     "英名": "Cadlinella ornatissima",
-    "特徴": "",
+    "特徴": "体長は1～3cm程度で、白や淡黄色の丸い体にピンク色や黄色の突起が多数並び、棘のように見えることが特徴。触角と鰓は黄色や橙色で、全体的に丸く可愛らしい印象を与える。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、海綿を食べて暮らす。その独特な姿と鮮やかな色彩からダイバーに人気があるウミウシの一種。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%A4%E3%82%AC%E3%82%B0%E3%83%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%A4%E3%82%AC%E3%82%B0%E3%83%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3236,7 +3236,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "オシャレコンペイトウウミウシ",
     "英名": "Batangas Halgerda",
-    "特徴": "",
+    "特徴": "体長は2～4cm程度で、白い体に黄色やオレンジ色の丸い突起が多数並び、和菓子の金平糖のような外見をしている。突起の先端は透明感があり、触角と鰓は黄色から橙色で目立つ。浅い岩礁域やサンゴ礁、水深数メートルの場所に生息し、海綿を食べて生活する。その独特で可愛らしい姿からダイバーに人気があり、海中で見つけると印象に残る存在である。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AA%E3%82%B7%E3%83%A3%E3%83%AC%E3%82%B3%E3%83%B3%E3%83%9A%E3%82%A4%E3%83%88%E3%82%A6%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AA%E3%82%B7%E3%83%A3%E3%83%AC%E3%82%B3%E3%83%B3%E3%83%9A%E3%82%A4%E3%83%88%E3%82%A6%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3246,7 +3246,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "オトヒメウミウシ",
     "英名": "Goniobranchus kuniei",
-    "特徴": "",
+    "特徴": "体長は5～10cm程度で、白い体地色に赤紫色やピンク色の網目模様が広がり、外套膜の縁には紫色や青色の帯が走る。触角と鰓は鮮やかなオレンジ色で、優雅で華やかな印象を与える。浅い岩礁域やサンゴ礁域、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。その美しい模様と色彩からダイバーに人気が高く、海中で見かけるとひときわ目を引く存在である。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AA%E3%83%88%E3%83%92%E3%83%A1%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AA%E3%83%88%E3%83%92%E3%83%A1%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3256,7 +3256,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "キイロイボウミウシ",
     "英名": "Ocellate phyllidia",
-    "特徴": "",
+    "特徴": "体長は3～6cm程度で、全体が鮮やかな黄色をしており、背面には白や淡黄色の突起が多数並びイボ状に見える。触角と鰓も黄色で体色と同化しているが、突起の先端はやや白っぽく際立つことがある。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。その特徴的なイボ状の突起と鮮やかな色彩からダイバーに人気があり、海中でも目立つ存在である。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AD%E3%82%A4%E3%83%AD%E3%82%A4%E3%83%9C%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AD%E3%82%A4%E3%83%AD%E3%82%A4%E3%83%9C%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3266,7 +3266,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "キイロウミウシ",
     "英名": "Black-margined glossodoris",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、全身が鮮やかな黄色をしており、外套膜の縁には紫色や白色の細い縁取りがある。触角と鰓は橙色で目立ち、浅い岩礁域や潮間帯下部、水深数メートルの場所に生息する。主に海綿を食べて暮らし、その明るい体色と美しい縁取りから海中でもよく目立ち、ダイバーに人気がある。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AD%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AD%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3276,7 +3276,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "クロシタナシウミウシ",
     "英名": "Dendrodoris fumata",
-    "特徴": "",
+    "特徴": "体長は3～6cm程度で、全身が黒色から濃い紫色をしており、光沢がある滑らかな体表が特徴。触角と鰓も体色と同じ黒系で目立たないが、全体に重厚感がある。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、海綿を食べて暮らす。地味だが存在感があり、見つけると印象に残るウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AF%E3%83%AD%E3%82%B7%E3%82%BF%E3%83%8A%E3%82%B7%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AF%E3%83%AD%E3%82%B7%E3%82%BF%E3%83%8A%E3%82%B7%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3286,7 +3286,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ケラマミノウミウシ",
     "英名": "Samla bicolor",
-    "特徴": "",
+    "特徴": "体長は2～3cm程度で、透明感のある白い体に赤褐色の細長いミノが多数並び、先端は白く目立つ。触角は白色で細く、繊細な印象を与える。浅い岩礁域やサンゴ礁、水深数メートルから20m程度の場所に生息し、ヒドラ類を食べて暮らす。小型ながら鮮やかで美しく、ダイバーに人気のあるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B1%E3%83%A9%E3%83%9E%E3%83%9F%E3%83%8E%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B1%E3%83%A9%E3%83%9E%E3%83%9F%E3%83%8E%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3296,7 +3296,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "コールマンウミウシ",
     "英名": "Chromodoris colemani",
-    "特徴": "",
+    "特徴": "体長は2～4cm程度で、白い体に紫や赤紫色の網目模様が広がり、外套膜の縁は黄色で縁取られる。触角と鰓は黄色で鮮やかさが際立つ。浅い岩礁域やサンゴ礁、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。独特で美しい模様と配色が特徴で、ダイバーにとって人気のあるウミウシの一種である。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B3%E3%83%BC%E3%83%AB%E3%83%9E%E3%83%B3%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B3%E3%83%BC%E3%83%AB%E3%83%9E%E3%83%B3%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3306,7 +3306,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "コナユキツバメガイ",
     "英名": "Chelidonura amoena",
-    "特徴": "",
+    "特徴": "体長は3～6cm程度で、全身が白色または淡灰色で雪のような細かい斑点があり、体の縁はやや波打つ。触角は短く目立たないが、全体に上品な印象を与える。浅い砂地や岩礁域、水深数メートルの場所に生息し、藻類を食べて暮らす。白く美しい体色が砂地に映え、ダイバーが見つけると雪のように感じるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B3%E3%83%8A%E3%83%A6%E3%82%AD%E3%83%84%E3%83%90%E3%83%A1%E3%82%AC%E3%82%A4.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B3%E3%83%8A%E3%83%A6%E3%82%AD%E3%83%84%E3%83%90%E3%83%A1%E3%82%AC%E3%82%A4.png",
     "魚の仲間": "ウミウシ"
@@ -3316,7 +3316,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "コモンウミウシ",
     "英名": "Gold-Spotted Chromodoris",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、白っぽい体地色に黄色やオレンジ色の細かい斑点が多数散らばり、外套膜の縁には紫色や青色の細い帯が走る。触角と鰓は橙色で目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。派手さはないが可愛らしい色合いで、ダイバーに親しまれているウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B3%E3%83%A2%E3%83%B3%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B3%E3%83%A2%E3%83%B3%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3326,7 +3326,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "サラサウミウシ",
     "英名": "Chromodoris tinctoria",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、白い体地色に赤褐色の網目状模様が広がり、外套膜の縁には黄色の細い帯が走る。触角と鰓は橙色で目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。美しい模様と明るい配色が特徴で、海中でもよく目立ち、ダイバーに人気のあるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B5%E3%83%A9%E3%82%B5%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B5%E3%83%A9%E3%82%B5%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3335,8 +3335,8 @@ window.FISHES = [
     "FishID": 334,
     "GroupID": 38,
     "Name": "シラライロウミウシ",
-    "英名": "",
-    "特徴": "",
+    "英名": "none",
+    "特徴": "体長は3～5cm程度で、全身が淡い白色や薄紫色をしており、外套膜の縁には黄色や橙色の細い帯が走る。触角と鰓は橙色で鮮やかさを添える。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。淡い体色と縁取りの美しさが上品で、ダイバーに人気のあるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B7%E3%83%A9%E3%83%A9%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B7%E3%83%A9%E3%83%A9%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3345,8 +3345,8 @@ window.FISHES = [
     "FishID": 335,
     "GroupID": 38,
     "Name": "シロウミウシ",
-    "英名": "",
-    "特徴": "",
+    "英名": "none",
+    "特徴": "体長は3～5cm程度で、全身が純白で滑らかな体表を持ち、外套膜の縁には黄色や橙色の細い帯が走ることが多い。触角と鰓は橙色で目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。シンプルながら美しい白色の体は海中で映え、ダイバーに親しまれるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B7%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B7%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3356,7 +3356,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "シンデレラウミウシ",
     "英名": "Royal hypselodoris",
-    "特徴": "",
+    "特徴": "体長は5～8cm程度で、体地色は鮮やかな紫色やピンク色をしており、外套膜の縁には白色や薄紫色の細い帯が走る。触角と鰓は黄色や橙色で鮮やかに際立つ。浅い岩礁域やサンゴ礁、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。華やかな色彩と優雅な姿から、ダイバーに非常に人気の高いウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B7%E3%83%B3%E3%83%87%E3%83%AC%E3%83%A9%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B7%E3%83%B3%E3%83%87%E3%83%AC%E3%83%A9%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3365,8 +3365,8 @@ window.FISHES = [
     "FishID": 337,
     "GroupID": 38,
     "Name": "スミゾメキヌハダウミウシ",
-    "英名": "",
-    "特徴": "",
+    "英名": "none",
+    "特徴": "体長は3～5cm程度で、全身が黒褐色から黒色で光沢があり、細かい突起が全体を覆うためザラザラした質感に見える。触角と鰓も体色と同じ黒系で目立たない。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、他のウミウシやヒトデに寄生して体表を食べることがある。地味だが独特な生態を持つウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B9%E3%83%9F%E3%82%BE%E3%83%A1%E3%82%AD%E3%83%8C%E3%83%8F%E3%83%80%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B9%E3%83%9F%E3%82%BE%E3%83%A1%E3%82%AD%E3%83%8C%E3%83%8F%E3%83%80%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3376,7 +3376,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "タテヒダイボウミウシ",
     "英名": "Varicose phyllidia",
-    "特徴": "",
+    "特徴": "体長は10～20cm程度と大型で、体色は赤褐色から橙色で、縦方向にひだ状の隆起が多数あり、表面には白っぽい斑点が散在する。触角と鰓も同系色で大きく目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。その大きさと特徴的なひだ模様でダイバーに強い印象を与えるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%BF%E3%83%86%E3%83%92%E3%83%80%E3%82%A4%E3%83%9C%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%BF%E3%83%86%E3%83%92%E3%83%80%E3%82%A4%E3%83%9C%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3386,7 +3386,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ニシキウミウシ",
     "英名": "Ceratosoma trilobatum",
-    "特徴": "",
+    "特徴": "体長は5～15cm程度で、成長段階によって色彩が変化する。若い個体は赤紫色に黄色の斑点があり、成長すると白や紫、黄色などの鮮やかな帯模様が現れる。触角と鰓は橙色で目立つ。浅い岩礁域やサンゴ礁、水深数メートルから30m程度の場所に生息し、海綿を食べて暮らす。派手で美しい体色は海中でもひときわ目立ち、ダイバーに人気が高い。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%8B%E3%82%B7%E3%82%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%8B%E3%82%B7%E3%82%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3396,7 +3396,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "パイナップルウミウシ",
     "英名": "Halgerda willeyi",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、体色は黄色から黄褐色で、背面には黒や茶色の細かい斑点が密に散らばり、表面がざらついたパイナップルのように見える。触角と鰓は黒褐色で目立つ。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、海綿を食べて暮らす。独特な見た目と名前の可愛らしさからダイバーに親しまれているウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%91%E3%82%A4%E3%83%8A%E3%83%83%E3%83%97%E3%83%AB%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%91%E3%82%A4%E3%83%8A%E3%83%83%E3%83%97%E3%83%AB%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3406,7 +3406,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ハナミドリガイ",
     "英名": "Elysia splendens",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、体色は緑色を基調とし、白やピンク色の細い縁取りや斑点があり華やかな印象を与える。体は細長く、触角は橙色や黄色で目立つ。浅い岩礁域や海藻の多い場所、水深数メートルから20m程度に生息し、藻類を食べて暮らす。美しい体色と可憐な姿で、ダイバーに人気があるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%8F%E3%83%8A%E3%83%9F%E3%83%89%E3%83%AA%E3%82%AC%E3%82%A4.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%8F%E3%83%8A%E3%83%9F%E3%83%89%E3%83%AA%E3%82%AC%E3%82%A4.png",
     "魚の仲間": "ウミウシ"
@@ -3415,8 +3415,8 @@ window.FISHES = [
     "FishID": 342,
     "GroupID": 38,
     "Name": "ヒロウミウシ",
-    "英名": "",
-    "特徴": "",
+    "英名": "none",
+    "特徴": "体長は1～3cm程度で、体色は鮮やかなピンク色や赤紫色をしており、外套膜の縁には白い波状の縁取りが走る。触角と鰓は橙色で小さい体ながら目立つ存在。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、海綿やコケムシを食べて暮らす。小型で可愛らしい姿と美しい色彩で、ダイバーに人気のウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%92%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%92%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3426,7 +3426,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ホウズキエラガイ",
     "英名": "Berthellina delicata",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、体色は明るい橙色から赤橙色で、外套膜の縁に白色の帯が走ることが多い。背面中央にはやや盛り上がりがあり、触角と鰓は体色と同系色で目立つ。浅い岩礁域やサンゴ礁、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。灯籠のような暖かい色合いが特徴で、海中でもよく目立つウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9B%E3%82%A6%E3%82%BA%E3%82%AD%E3%82%A8%E3%83%A9%E3%82%AC%E3%82%A4.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9B%E3%82%A6%E3%82%BA%E3%82%AD%E3%82%A8%E3%83%A9%E3%82%AC%E3%82%A4.png",
     "魚の仲間": "ウミウシ"
@@ -3435,8 +3435,8 @@ window.FISHES = [
     "FishID": 344,
     "GroupID": 38,
     "Name": "ホンクロシタナシウミウシ",
-    "英名": "",
-    "特徴": "",
+    "英名": "none",
+    "特徴": "体長は3～6cm程度で、全身が黒褐色から黒色をしており、表面は滑らかで光沢がある。触角と鰓も体色と同じ黒系で目立たないが、全体に引き締まった印象を与える。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、海綿を食べて暮らす。地味ながら存在感があり、ダイバーにとって印象に残るウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9B%E3%83%B3%E3%82%AF%E3%83%AD%E3%82%B7%E3%82%BF%E3%83%8A%E3%82%B7%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9B%E3%83%B3%E3%82%AF%E3%83%AD%E3%82%B7%E3%82%BF%E3%83%8A%E3%82%B7%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3446,7 +3446,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "マダライロウミウシ",
     "英名": "Risbecia tryoni",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、白い体地色に紫色や赤紫色の斑点が散在し、外套膜の縁には黄色や橙色の細い帯が走る。触角と鰓は橙色で鮮やかに目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。斑点模様と縁取りの色彩が美しく、ダイバーに人気が高いウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9E%E3%83%80%E3%83%A9%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9E%E3%83%80%E3%83%A9%E3%82%A4%E3%83%AD%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3456,7 +3456,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "マンリュウウミウシ",
     "英名": "Carminodoris armata Baba",
-    "特徴": "",
+    "特徴": "体長は2～4cm程度で、白い体地色に黄色やオレンジ色の突起が多数並び、背面中央には黒褐色の縦線が走ることが多い。触角と鰓は橙色で目立つ。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、海綿を食べて暮らす。独特の突起と色彩が美しく、海中で見つけると印象に残るウミウシで、ダイバーに人気がある。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9E%E3%83%B3%E3%83%AA%E3%83%A5%E3%82%A6%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9E%E3%83%B3%E3%83%AA%E3%83%A5%E3%82%A6%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3466,7 +3466,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ミアミラウミウシ",
     "英名": "Miamira flavicostata",
-    "特徴": "",
+    "特徴": "体長は5～10cm程度で、緑色や黄緑色の体地色に赤紫色やピンク色の網目模様が入り、背面には突起が多数ある。触角と鰓はオレンジ色や赤色で鮮やかに目立つ。浅い岩礁域やサンゴ礁、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。色彩と模様が非常に美しく華やかで、ダイバーに人気のあるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9F%E3%82%A2%E3%83%9F%E3%83%A9%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9F%E3%82%A2%E3%83%9F%E3%83%A9%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3476,7 +3476,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ミゾレウミウシ",
     "英名": "Chromodoris willani",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、白い体地色に青紫色の縦線が数本走り、外套膜の縁には白色や淡紫色の帯がある。触角と鰓は橙色で鮮やかに目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。涼しげで上品な色彩が美しく、海中でもよく映え、ダイバーに人気のあるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9F%E3%82%BE%E3%83%AC%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9F%E3%82%BE%E3%83%AC%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3485,8 +3485,8 @@ window.FISHES = [
     "FishID": 349,
     "GroupID": 38,
     "Name": "ミツイラメリウミウシ",
-    "英名": "",
-    "特徴": "",
+    "英名": "none",
+    "特徴": "体長は1～2cm程度と小型で、体色は黄色や黄褐色で、背面には白色や淡黄色の細かい斑点が散在する。触角と鰓は黄色で体色と同化しているが、近くで見ると可愛らしい印象を与える。浅い岩礁域や潮間帯下部、水深数メートルの場所に生息し、海綿や付着藻類を食べて暮らす。小さくても美しく、ダイバーに親しまれるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9F%E3%83%84%E3%82%A4%E3%83%A9%E3%83%A1%E3%83%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9F%E3%83%84%E3%82%A4%E3%83%A9%E3%83%A1%E3%83%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3496,7 +3496,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ミヤコウミウシ",
     "英名": "Dendrodoris denisoni",
-    "特徴": "",
+    "特徴": "体長は10～20cm程度と大型で、体色は淡い紫色やピンク色で、外套膜全体に白色の細かい斑点が散在する。触角と鰓は橙色で大きく目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。その大きさと上品で美しい色彩から、海中でもひときわ目を引き、ダイバーに人気のあるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9F%E3%83%A4%E3%82%B3%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9F%E3%83%A4%E3%82%B3%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3506,7 +3506,7 @@ window.FISHES = [
     "GroupID": 38,
     "Name": "ユキヤマウミウシ",
     "英名": "Diendoronotus",
-    "特徴": "",
+    "特徴": "体長は3～5cm程度で、白い体地色に黒褐色の縞模様が縦方向に走り、外套膜の縁は黄色で縁取られる。触角と鰓は黄色から橙色で鮮やかに目立つ。浅い岩礁域や潮間帯下部、水深数メートルから20m程度の場所に生息し、海綿を食べて暮らす。雪山を思わせる白と黒のコントラストが美しく、ダイバーに人気のあるウミウシである。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%A6%E3%82%AD%E3%83%A4%E3%83%9E%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%A6%E3%82%AD%E3%83%A4%E3%83%9E%E3%82%A6%E3%83%9F%E3%82%A6%E3%82%B7.png",
     "魚の仲間": "ウミウシ"
@@ -3527,8 +3527,8 @@ window.FISHES = [
     "Name": "不明",
     "英名": "Unknown",
     "特徴": "分類が不明",
-    "IconURL": "",
-    "IconInactiveURL": "",
+    "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E4%B8%8D%E6%98%8E.png",
+    "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E4%B8%8D%E6%98%8E_bw.png",
     "魚の仲間": "不明"
   },
   {
