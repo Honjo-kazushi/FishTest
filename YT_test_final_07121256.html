@@ -593,11 +593,20 @@ console.time('initData_total');
       // 5) 魚選択ドロップダウンに全件表示
       populateFishSelect(fishes);
       // 6) 乱数で初期グループIDを決定・セット
-      //オープニングビデオあえて選ぶ
-      const initialGroup = OPENING_GROUP_ID; // Math.floor(Math.random() * MAX_GROUP) + 1;
-      //const initialGroup = Math.floor(Math.random() * MAX_GROUP) + 1;
-      
-      currentGroupId = initialGroup;
+      // ① groupsSequence の先頭＋中身＋末尾を準備
+      // （起動時に一度だけシャッフルしておけば以降は変わらない）
+      const otherIds = GROUPS.map(g=>g.groupId)
+                              .filter(id=>id!==OPENING_GROUP_ID && id!==50 && id!==39);
+      // Fisher–Yates シャッフル
+        for (let i = otherIds.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [otherIds[i], otherIds[j]] = [otherIds[j], otherIds[i]];
+        }
+        groupSequence = [OPENING_GROUP_ID, ...otherIds, 50, 39];
+        sequenceIndex = 0;
+      // ② その後は従来の魚データ取得・UI描画…
+        const initialGroup = groupSequence[sequenceIndex];
+        currentGroupId = initialGroup;// …fetchして videos, videoIds を作る…
       
       // 7) 初期グループの動画情報だけを取得
       //videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${initialGroup}`)
@@ -1277,8 +1286,14 @@ console.time('switchGroup_total');
         // 「次グループ再生」が呼ばれたらグループ固定モードを解除
       isGroupFixed = false;
       console.log(`[nextGroup] called with play=${repeatMode}, fromGroup=${currentGroupId}`);
-      // 1) グループIDをインクリメント（最大を超えたら 1 に戻す）
-      currentGroupId = currentGroupId < MAX_GROUP ? currentGroupId + 1 : 1;
+
+      sequenceIndex++;
+      if (sequenceIndex >= groupSequence.length) {
+        // オープニングを飛ばして、乱数グループの先頭から再開
+        sequenceIndex = 1;
+      }  
+      currentGroupId = groupSequence[sequenceIndex];
+      
       console.log(`[nextGroup] fetching group=${currentGroupId}, play=${repeatMode}`);
 console.time('switchGroup_fetch');
       // 2) 新グループの動画を取得し、videoIds を再生成
@@ -1342,7 +1357,14 @@ console.timeEnd('switchGroup_total');
       document.getElementById('groupSelect').value = '';
 
       // 1) グループIDをデクリメント（1 より小さければ MAX_GROUP に戻す）
-      currentGroupId = currentGroupId > 1 ? currentGroupId - 1 : MAX_GROUP;
+      sequenceIndex--;
+      if (sequenceIndex < 1) {
+      // 先頭(オープニング＝index 0)の手前は
+      // 末尾（乱数グループ最後、ダイジェスト/不明含む）に飛ばす
+      sequenceIndex = groupSequence.length - 1;
+      }
+      currentGroupId = groupSequence[sequenceIndex];
+      
       // 2) 新しいグループの動画一覧を取得
       try {
         videos = await fetch(
