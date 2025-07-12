@@ -528,7 +528,7 @@
   { groupId: 53,nameJp: "マトウダイ" },
   { groupId: 54,nameJp: "キス" },
   { groupId: 55,nameJp: "キツネアマダイ" },
-  { groupId: 56,nameJp: "クラゲ" }
+  { groupId: 56,nameJp: "クラゲ" },
   { groupId: OPENING_GROUP_ID,nameJp: "オープニング" }
   ];
 
@@ -558,16 +558,17 @@ let currentLetter = "";
 
 
     async function initData() {
-console.time('initData_total');
+console.log('⑤ initData(): 開始 currentGroupId=', currentGroupId);
+//console.time('initData_total');
 //console.time('fetchFishes');
       // 1) 魚メタデータを取得
 //      fishes = await fetch(`${BASE_API_URL}?action=listFishes`)
 //                      .then(res => res.json());
 //console.timeEnd('fetchFishes');
       // 魚データは静的モジュールから即時取得
-      console.time('loadStaticFishes');
+      //console.time('loadStaticFishes');
       fishes = FISHES;
-      console.timeEnd('loadStaticFishes');
+      //console.timeEnd('loadStaticFishes');
 
 //console.time('fetchGroups');
       // 2) グループ一覧を取得してドロップダウンに反映
@@ -576,7 +577,7 @@ console.time('initData_total');
 //console.timeEnd('fetchGroups');
 //      populateGroupSelect(allGroups);
       // グループ一覧は静的配列から即時取得
-      console.log('loadStaticGroups', GROUPS.length, 'groups');
+      //console.log('loadStaticGroups', GROUPS.length, 'groups');
       populateGroupSelect(GROUPS);
 
       // 3) 五十音ボタンを初期化
@@ -596,6 +597,7 @@ console.time('initData_total');
      
       // 7) 初期グループの動画情報だけを取得
       if (currentGroupId === OPENING_GROUP_ID) {
+console.log('initData: オープニング動画を静的設定');
       // オープニング動画を静的に設定
         videos = [{
           FishID:      OPENING_FISH_ID,
@@ -638,9 +640,11 @@ console.time('initData_total');
 //        }
 //      }
 //console.timeEnd('initData_total');
+console.log('⑥ initData(): 動画取得後 videos.length=', videos.length);
 
       // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
       renderIconBar();
+console.log('⑦ initData(): renderIconBar(), videoIds=', videoIds);
       console.log('videoIds:', videoIds);
       
       // ── 追加: Cボタンで該当セレクトをクリア ──
@@ -688,14 +692,14 @@ console.time('initData_total');
         updateVideoMeta(firstVideo);
       
        // ———— 動画を再生せずセットだけしておく ————
-        ytPlayer.cueVideoById(extractVideoId(firstVideo.YouTubeURL));
+       // ytPlayer.cueVideoById(extractVideoId(firstVideo.YouTubeURL));
       // 必要に応じて自動再生したい場合は以下をアンコメント
-        playVideoByFish(firstFish, firstVideo);
+      //  playVideoByFish(firstFish, firstVideo);
       
       }
   }
 
-    document.addEventListener('DOMContentLoaded', initData);
+    //document.addEventListener('DOMContentLoaded', initData);
 
 // ひらがな→カタカナ変換ヘルパー
 function toKatakana(ch) {
@@ -972,8 +976,27 @@ function setupKanaButtons(fishes) {
       });
     }    
 
+function onPlayerReady(event) {
+console.log('② onPlayerReady(): プレイヤー準備完了');
+    // ここで初期データ取得＋最初の動画 head-cue or play を行う
+    initData().then(groupVideos => {
+console.log('③ initData.then(): groupVideos=', groupVideos);
+    if (!groupVideos || !groupVideos.length) return;
+    const vid = extractVideoId(groupVideos[0].YouTubeURL);
+console.log('④ onPlayerReady → load+play する videoId=', vid);
+    // 自動再生したいなら
+    ytPlayer.loadVideoById(vid);
+    ytPlayer.playVideo();
+    // 再生ボタン待ちなら
+    // ytPlayer.cueVideoById(vid);
+    }).catch(err => {
+console.error('★ initData() でエラー:', err);
+    });
+}
+    
 function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player("player", {
+console.log('① onYouTubeIframeAPIReady(): IFrame API 読み込み完了');
+    ytPlayer = new YT.Player("player", {
     height: "360",
     width: "640",
 
@@ -985,6 +1008,9 @@ function onYouTubeIframeAPIReady() {
     },
     // 停止時にオーバーレイ制御を行う
     events: {
+      // プレイヤーが準備完了したら呼ばれる
+      onReady:   onPlayerReady,
+      // 状態変化（PLAYING/ENDEDなど）はこれまでどおり
       onStateChange: onPlayerStateChange,
     },
   });

@@ -200,13 +200,72 @@
       .container {
         flex-direction: column;
       }
+    
+      /* 左右パネルをともにフル幅に */
+      .left-panel,
+      .right-panel {
+        flex: 0 0 100%;
+        max-width: none;
+        padding: 0.5rem 1rem;
+      }
+    
+      /* 2. プレイヤー＆アイコンリサイズ */
+      #player {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16/9;
+      }
+      .icon-bar {
+        display: flex;                  /* 横並び */
+        overflow-x: auto;               /* 横スクロール */
+        -webkit-overflow-scrolling: touch; /* スムーズスクロール */
+        gap: 0.5rem;                    /* アイコン間隔 */
+        padding: 0.5rem 1rem;           /* 左右余白 */
+      }
+      .icon-bar::-webkit-scrollbar {    /* お好みでスクロールバー非表示 */
+        display: none;
+      }
+      .fish-icon img {
+        width: 60px;
+        height: 60px;
+      }
+      .fish-label {
+        font-size: 0.6rem;
+      }
+
+      /* 3. コントロール＆メタ情報再配置 */
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;           /* ボタン間の隙間を詰める */
+        justify-content: center;
+        padding: 0.5rem 1rem;
+      }
+        /* ここを追加：ボタン個別の調整 */
+      .controls button {
+        flex: 0 0 calc(25% - 0.3rem);
+        padding: 0.3rem 0.5rem; /* ボタンを小さく */
+        font-size: 0.8rem;      /* 文字サイズを少し下げる */
+        box-sizing: border-box;
+        min-width: 0;           /* 狭い場合でも縮むように */
+      }
       .video-meta {
         flex-direction: column;
         align-items: center;
+        font-size: 0.7rem;
+        line-height: 1.4;
+        gap: 0.25rem;
+        padding: 0.5rem 1rem;
+      }
+      /* ヘッダー画像 */
+      .header-image {
+        max-height: 200px;
+        object-fit: cover;
+        width: 100%;
       }
     }
 
-    /* ① メディアクエリの外側に置くこと */
+/* ① メディアクエリの外側に置くこと */
 .container {
   display: flex;
   flex-wrap: nowrap;       /* 折り返し禁止 */
@@ -223,60 +282,6 @@
 .right-panel {
   flex: 1;                 /* 残り幅を占有 */
 }
-
-
-/* ▼ フィルターパネルを縦並び・左詰めに */
-/*.filter-panel.small {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;  /* ← 追加 */
-  /*justify-content: flex-start;    /* 項目を上詰めに */
-  /*gap: 0.5rem;
-  margin: 0.5rem 0 2rem;
-  width: 100%;             /* お好みで */
-  /*max-width: none;  /* 固定幅の解除 */
-  /*box-sizing: border-box;
-  margin-bottom: 0.2rem;  /* 任意で調整：仲間選択とアイコン群の垂直間隔 */
- 
-/*}
-
-/* select 自体を100%幅に */
-/*.filter-panel.small {
-  flex: 0 0 200px !important;        /* 幅を150→200pxに拡大
-}
-*/
-
-/*.filter-panel.small select {
-  width: 100% !important;
-  max-width: none;
-  box-sizing: border-box; /* padding 分も含めて幅計算 */
-  /*display: block;          /* ブロック要素にしておくと縦並びが安定します */
-  /*margin: 0;
-}
-#fishSelect {
-  display: block !important;
-  width: 50% !important;
-  max-width: 100% !important;
-  box-sizing: border-box;
-  /* padding はそのまま効かせたいならこのままでOK */
-/*}
-
-#placeSelect {
-  display: block !important;
-  width: 30% !important;
-  max-width: 100% !important;
-  box-sizing: border-box;
-  /* padding はそのまま効かせたいならこのままでOK */
-/*}
-
-#groupSelect {
-  display: block !important;
-  width: 40% !important;
-  max-width: 100% !important;
-  box-sizing: border-box;
-  /* padding はそのまま効かせたいならこのままでOK */
-/*}
- */
 
 /* ── ここから下を“既存のすべての /*…*/ コメント”よりも後に置いてください ── */
 /* フィルターパネル全体を縦積みかつ左パネル幅いっぱいに広げる */
@@ -529,7 +534,6 @@
   { groupId: 54,nameJp: "キス" },
   { groupId: 55,nameJp: "キツネアマダイ" },
   { groupId: 56,nameJp: "クラゲ" }
-  { groupId: OPENING_GROUP_ID,nameJp: "オープニング" }
   ];
 
     //
@@ -588,57 +592,44 @@ console.time('initData_total');
       //populatePlaceSelect(allPlaces);
       // 5) 魚選択ドロップダウンに全件表示
       populateFishSelect(fishes);
-      // 6) 起動時はオープニングを最初に再生 → 専用グループをセット
-      currentGroupId = OPENING_GROUP_ID;
       // 6) 乱数で初期グループIDを決定・セット
+      //オープニングビデオあえて選ぶ
+      const initialGroup = OPENING_GROUP_ID; // Math.floor(Math.random() * MAX_GROUP) + 1;
       //const initialGroup = Math.floor(Math.random() * MAX_GROUP) + 1;
-      //currentGroupId = initialGroup;
-     
+      
+      currentGroupId = initialGroup;
+      
       // 7) 初期グループの動画情報だけを取得
-      if (currentGroupId === OPENING_GROUP_ID) {
-      // オープニング動画を静的に設定
-        videos = [{
-          FishID:      OPENING_FISH_ID,
-          YouTubeURL:  'https://youtu.be/U-lKvSfwCPA',
-          撮影場所:    '',
-          撮影年:      ''
-        }];
-      } else {
-        // 通常のグループフェッチ
-        videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${currentGroupId}`)
-                   .then(res=>res.json());
-      }
       //videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${initialGroup}`)
       //                 .then(res => res.json());
       
-//console.time('fetchVideos');
+console.time('fetchVideos');
       //TEST用
-      //videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${initialGroup}`)
-      //             .then(res => res.json())
-      //             .catch(err => { console.error('[initData] fetch error:', err); return []; });
-//console.timeEnd('fetchVideos');
-//                   console.log('[initData] initialGroup=', initialGroup, ' videos.length=', videos.length);
+      videos = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${initialGroup}`)
+                   .then(res => res.json())
+                   .catch(err => { console.error('[initData] fetch error:', err); return []; });
+console.timeEnd('fetchVideos');
+                   console.log('[initData] initialGroup=', initialGroup, ' videos.length=', videos.length);
 
       // 【フォールバック】動画がゼロ件なら次のグループを自動で探す
-//      if (videos.length === 0) {
-//        console.warn('[initData] no videos for group', initialGroup);
-//        for (let gid = 1; gid <= MAX_GROUP; gid++) {
-//          if (gid === initialGroup) continue;
-//console.time('fetchVideos');
-//          const tmp = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${gid}`)
-//                            .then(r=>r.json())
-//                            .catch(()=>[]);
-//console.time('fetchVideos');
-//                            if (tmp.length) {
-//            currentGroupId = gid;
-//            videos = tmp;
-//            console.info('[initData] switched to group', gid, ' videos.length=', tmp.length);
-//            break;
-//          }
-//        }
-//      }
-//console.timeEnd('initData_total');
-
+      if (videos.length === 0) {
+        console.warn('[initData] no videos for group', initialGroup);
+        for (let gid = 1; gid <= MAX_GROUP; gid++) {
+          if (gid === initialGroup) continue;
+console.time('fetchVideos');
+          const tmp = await fetch(`${BASE_API_URL}?action=listVideosByGroup&groupId=${gid}`)
+                            .then(r=>r.json())
+                            .catch(()=>[]);
+console.time('fetchVideos');
+                            if (tmp.length) {
+            currentGroupId = gid;
+            videos = tmp;
+            console.info('[initData] switched to group', gid, ' videos.length=', tmp.length);
+            break;
+          }
+        }
+      }
+console.timeEnd('initData_total');
       // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
       renderIconBar();
       console.log('videoIds:', videoIds);
@@ -688,10 +679,14 @@ console.time('initData_total');
         updateVideoMeta(firstVideo);
       
        // ———— 動画を再生せずセットだけしておく ————
-        ytPlayer.cueVideoById(extractVideoId(firstVideo.YouTubeURL));
-      // 必要に応じて自動再生したい場合は以下をアンコメント
-        playVideoByFish(firstFish, firstVideo);
+      //  ytPlayer.cueVideoById(extractVideoId(firstVideo.YouTubeURL));
       
+      // 必要に応じて自動再生したい場合は以下をアンコメント
+      // playVideoByFish(entry.fishId, entry.videoId);
+      // 動画を「セットだけ」ではなく、そのまま再生したい場合
+        const vid = extractVideoId(firstVideo.YouTubeURL);
+        ytPlayer.loadVideoById(vid);
+        ytPlayer.playVideo();
       }
   }
 

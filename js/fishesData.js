@@ -1,6 +1,19 @@
 // public/js/fishesData.js
 /** @type {{FishID:number,GroupID:number,Name:string,"英名"?:string,"魚の仲間"?:string,特徴?:string,IconURL:string,IconInactiveURL:string}[]} */
+const OPENING_GROUP_ID = 999;   // 他のIDと衝突しない任意の番号
+const OPENING_FISH_ID  = 9999;
+
 window.FISHES = [
+  {
+    "FishID": OPENING_FISH_ID,
+    "GroupID": OPENING_GROUP_ID,
+    "Name": "オープニングビデオ",
+    "英名": "Opening Video",
+    "特徴": "孫のけんちゃんが描いてコンテストで入賞した魚たちを泳がしてみました。",
+    "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/FishpediaTitle.png",
+    "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/FishpediaTitle.png",
+    "魚の仲間": "オープニング"
+  },
   {
     "FishID": 1,
     "GroupID": 42,
