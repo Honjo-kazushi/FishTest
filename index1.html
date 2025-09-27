@@ -772,7 +772,7 @@ function populateGroupSelect(allGroups) {
         if (meta) updateVideoMeta(meta);
       }
     });
-    }
+}
         
   
 function populatePlaceSelect(list) {
@@ -924,7 +924,18 @@ function renderIconBar() {
   const selectedPlace = document.getElementById('placeSelect').value;
 
   // 1) アイコン表示用に、Group 内の魚IDをあーわ順で並べ替え
-  const fishIds = Array.from(new Set(videos.map(v => v.FishID)));
+  //const fishIds = Array.from(new Set(videos.map(v => v.FishID)));
+  // videos が undefined でも空配列にフォールバック
+  const safeVideos = Array.isArray(videos) ? videos : [];
+  // undefined や null を除外して FishID を抽出
+  const fishIds = Array.from(
+    new Set(
+      safeVideos
+        .filter(v => v != null && typeof v.FishID !== 'undefined')
+        .map(v => v.FishID)
+    )
+  );
+
   const sortedFishIds = fishIds
     .map(id => fishes.find(f => f.FishID === id))
     .sort((a, b) => a.Name.localeCompare(b.Name, 'ja'))
@@ -1187,37 +1198,42 @@ async function nextGroup() {
       fishId:  v.FishID,
       videoId: extractVideoId(v.YouTubeURL)
     }));
-  currentIndex = 0;
+    currentIndex = 0;
 
     // 3) アイコンバーを再描画
-  renderIconBar();
+    renderIconBar();
     // 4) 先頭動画を load→play もしくは cue
-  if (videoIds.length > 0) {
-    const entry = videoIds[0];
-    const fish  = fishes.find(f => f.FishID === entry.fishId);
-    const video = videos.find(v =>
-      v.FishID === entry.fishId &&
-      extractVideoId(v.YouTubeURL) === entry.videoId
-      );
-      updateFishInfo(fish);
-      updateVideoMeta(video);
-      // repeatMode フラグで再生 or キューを振り分け
-    if (repeatMode) {
-     // グループ最初の動画を読み込んで再生
-      const vid = entry.videoId;
-      if (vid) {
-        window.ytPlayer.loadVideoById(vid);
-        window.ytPlayer.playVideo();
-      }
-    } else {
-     // 再生せずキューだけ
-      const vid = entry.videoId;
-      if (vid) {
-        window.ytPlayer.cueVideoById(vid);
+    if (videoIds.length > 0) {
+      const entry = videoIds[0];
+      const fish  = fishes.find(f => f.FishID === entry.fishId);
+      const video = videos.find(v =>
+        v.FishID === entry.fishId &&
+        extractVideoId(v.YouTubeURL) === entry.videoId
+        );
+        updateFishInfo(fish);
+        updateVideoMeta(video);
+        // repeatMode フラグで再生 or キューを振り分け
+      if (repeatMode) {
+       // グループ最初の動画を読み込んで再生
+        const vid = entry.videoId;
+        if (vid) {
+          window.ytPlayer.loadVideoById(vid);
+          window.ytPlayer.playVideo();
+        }
+      } else {
+       // 再生せずキューだけ
+        const vid = entry.videoId;
+        if (vid) {
+          window.ytPlayer.cueVideoById(vid);
+        }
       }
     }
-
+  } catch (err) {
+    console.error('[nextGroup] Error:', err);
+    videos = [];
+  }
 }
+
 
 async function prevGroup() {
 
@@ -1263,7 +1279,12 @@ async function prevGroup() {
       } else {
         window.ytPlayer.cueVideoById(entry.videoId);
       }
-}
+    }
+  } catch (err) {
+    console.error('[nextGroup] Error:', err);
+    videos = [];
+  }
+}  
 
 </script>
   
