@@ -3616,163 +3616,163 @@ window.FISHES = [
   },
   {
     "FishID": 361,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "イシヨウジ",
     "英名": "Messmate pipefish",
     "特徴": "体長は最大で約20cmほど。浅い海のサンゴ礁などに生息し、岩やサンゴの上をすべるようにゆっくりと泳ぐことが多い。ペアになると一夫一妻制だが、昼間は別々に行動し毎朝相手を確認するための「あいさつ行動」を行う。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%A4%E3%82%B7%E3%83%A8%E3%82%A6%E3%82%B8.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%A4%E3%82%B7%E3%83%A8%E3%82%A6%E3%82%B8.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 362,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "ウミイチゴ",
     "英名": "Eleutherobia rubra",
     "特徴": "",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%A6%E3%83%9F%E3%82%A4%E3%83%81%E3%82%B4.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%A6%E3%83%9F%E3%82%A4%E3%83%81%E3%82%B4.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 363,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "オオウミウマ",
     "英名": "Great seahorse",
     "特徴": "他のタツノオトシゴ属と比べてもかなり大きく成長をする個体で、大きいもので28㎝にもなる。\n泳ぎはニガテ、その分擬態にたけており、海藻の中まで入ってしまうと見つけるのが非常に難しい。\n魚なの見た目とはかけ離れているが、頭部の近くに鰓、胸鰭、背鰭もある。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AA%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%83%9E.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AA%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%A6%E3%83%9E.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 364,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "オオシャコガイ",
     "英名": "Giant clam",
     "特徴": "オオシャコガイは、自分の組織内に付着し共生している何十億もの藻が作り出す糖分やタンパク質を消費することで、巨大な体に成長する。その代わりに、藻に安全な生息場所を提供し、また、波状の溝の付いた殻を日中、海面下で広げてさまざまな色の外套膜を露出し日光浴することで、藻が光合成を行う機会を与えている。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AA%E3%82%AA%E3%82%B7%E3%83%A3%E3%82%B3%E3%82%AC%E3%82%A4.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AA%E3%82%AA%E3%82%B7%E3%83%A3%E3%82%B3%E3%82%AC%E3%82%A4.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 365,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "オオモンカエルアンコウ",
     "英名": "Commerson's frogfish",
     "特徴": "成魚になると子犬くらいの大きさになる大型のカエルアンコウ！紹介した時にデカすぎてゲストに認識してもらえなかった事もあります！カイメンやサンゴに擬態して動かずにジーッとしているんですが、たまに周りの色と明らかに違う所に居て逆に目立っちゃってる子も居ますね！色んなカラーバリエーションがある中、個人的にはピンク色がスポンジ感があって好きでーす。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AA%E3%82%AA%E3%83%A2%E3%83%B3%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AA%E3%82%AA%E3%83%A2%E3%83%B3%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 366,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "オビイシヨウジ",
     "英名": "Brownbanded pipefish",
     "特徴": "",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AA%E3%83%93%E3%82%A4%E3%82%B7%E3%83%A8%E3%82%A6%E3%82%B8.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AA%E3%83%93%E3%82%A4%E3%82%B7%E3%83%A8%E3%82%A6%E3%82%B8.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 367,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "カエルアンコウ",
     "英名": "Warty Frogfish",
     "特徴": "",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 368,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "クマドリカエルアンコウ",
     "英名": "Warty frogfish",
     "特徴": "イロカエルアンコウに似ていますが、クマドリカエルアンコウは体の模様が目につながっているところから区別できます。和名のクマドリは、この模様が歌舞伎の隈取に似ているところからきているようです。\n体色については白色の場合や、黄色の場合があります。全く違う模様としてな黒色の体色にオレンジ色の斑点の場合もあります。\n見た目に愛嬌があるため、ダイバーに人気のある魚です。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AF%E3%83%9E%E3%83%89%E3%83%AA%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AF%E3%83%9E%E3%83%89%E3%83%AA%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 369,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "クリイロカメガイ",
     "英名": "Cavolinia uncinata",
     "特徴": "クリオネのように天使の羽をパタパタさせてプランクトン生活を送るカイです。せわしなくパタパタする姿を見ていると、クリオネのような癒し系キャラにはなれなさそうです。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%AF%E3%83%AA%E3%82%A4%E3%83%AD%E3%82%AB%E3%83%A1%E3%82%AC%E3%82%A4.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%AF%E3%83%AA%E3%82%A4%E3%83%AD%E3%82%AB%E3%83%A1%E3%82%AC%E3%82%A4.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 370,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "サルバ",
     "英名": "Salpa",
     "特徴": "一見プラスチックかガラスやジェルなどの人工的な造り物のようにも見える、透明な謎の物体。「サルパ」と呼ばれるこの物体は実は海中に棲む生き物で、海の中を浮遊しながら生きる生態「尾索動物」です。海中でダイバーに目撃されたり、漁業の網に引っかかったり、また浜辺に大量に打ち上げられることもあります。クラゲに似たシースルーな体に内蔵のような物だけがオレンジに透けて見え、海中を漂う姿は「水中の神秘」と言われる謎の多い生態です。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%B5%E3%83%AB%E3%83%90.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%B5%E3%83%AB%E3%83%90.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 371,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "タツノオトシゴ",
     "英名": "Seahorse",
     "特徴": "馬に似た奇妙な外見もそうだが、極めて独特な生物である。ほかの魚類と異なり、一夫一婦制で、一生に1匹の相手とだけ交尾をする。さらに珍しいことには、オスが受精卵を体内で育てる唯一の生物なのだ。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%82%BF%E3%83%84%E3%83%8E%E3%82%AA%E3%83%88%E3%82%B7%E3%82%B4.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%82%BF%E3%83%84%E3%83%8E%E3%82%AA%E3%83%88%E3%82%B7%E3%82%B4.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 372,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "ハシナガウバウオ",
     "英名": "Urchin clingfish",
     "特徴": "岩礁域や珊瑚礁域の水深が-10ｍ位までの浅い水深にて、英名に、Urchin (ウニ) cling (すがりつく) と有る様に、ガンガゼの棘の間に生息しております。ウバウオ科の多くが吸盤状に進化した腹鰭を使って岩等に付着し生息しておりますが、本種の腹鰭は吸盤状に進化が遅れている為、岩などに付着している姿は、あまり見かけません。体型は細い円筒形にて吻は長く尖っており、体色は全身が暗褐色で、側面部と背面部に2本の黄色の細い縦帯が走ります。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%8F%E3%82%B7%E3%83%8A%E3%82%AC%E3%82%A6%E3%83%90%E3%82%A6%E3%82%AA.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%8F%E3%82%B7%E3%83%8A%E3%82%AC%E3%82%A6%E3%83%90%E3%82%A6%E3%82%AA.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 373,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "ピグミーシーホース",
     "英名": "Pygmy seahorse",
     "特徴": "ピグミーとは「ごく小さい」という意味を持っています。名前のとおり、とても小さな魚です。\nハチジョウタツという和名がつきました（ハチジョウは八丈島のことです）\n体中にあるイボイボが特徴です。体色にはいくつか（黄色など）のバリエーションがあるようですが、まだ赤色しか見たことがありません。とても小さい魚で、これを自分で探すのは無理だと思いました。指示棒で指されても、かなり注視しないとわかりません。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%94%E3%82%B0%E3%83%9F%E3%83%BC%E3%82%B7%E3%83%BC%E3%83%9B%E3%83%BC%E3%82%B9.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%94%E3%82%B0%E3%83%9F%E3%83%BC%E3%82%B7%E3%83%BC%E3%83%9B%E3%83%BC%E3%82%B9.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 374,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "ヒメヒラタカエルアンコウ",
     "英名": "Randall`s frogfish",
     "特徴": "",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%92%E3%83%A1%E3%83%92%E3%83%A9%E3%82%BF%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%92%E3%83%A1%E3%83%92%E3%83%A9%E3%82%BF%E3%82%AB%E3%82%A8%E3%83%AB%E3%82%A2%E3%83%B3%E3%82%B3%E3%82%A6.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 375,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "フウセンウオ",
     "英名": "Balloon lumpfish",
     "特徴": "海底の岩場に群生して生活してる。鰭が小さく泳ぎが不得意なので、腹鰭の吸盤で岩礁の岩に付着。雌が産卵後、雄が卵を孵化まで世話をするイクメンで、小さな風船のように膨らんだ体形が可愛らしい。和名、英名とも体形から付けられた。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%95%E3%82%A6%E3%82%BB%E3%83%B3%E3%82%A6%E3%82%AA.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%95%E3%82%A6%E3%82%BB%E3%83%B3%E3%82%A6%E3%82%AA.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 376,
-    "GroupID": 42,
+    "GroupID": 0,
     "Name": "ホシダカラ",
     "英名": "Tiger cowry",
     "特徴": "星宝。貝殻の模様を夜空の星に見立てたもの。潮間帯より下の岩礁やサンゴ礁に生息するタカラガイの仲間。\n外套膜は複雑なむら雲状の模様があり、突起の先端は白色、外套膜の合うところは、朱紅色の線が走ります。",
     "IconURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/color/%E3%83%9B%E3%82%B7%E3%83%80%E3%82%AB%E3%83%A9.png",
     "IconInactiveURL": "https://storage.googleapis.com/fishiconbook.firebasestorage.app/fish_icons/bw/%E3%83%9B%E3%82%B7%E3%83%80%E3%82%AB%E3%83%A9.png",
-    "魚の仲間": "ハナダイ"
+    "魚の仲間": "その他"
   },
   {
     "FishID": 377,
