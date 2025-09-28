@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fish Viewer - ダイビング魚データベース</title>
+  <title>ダイビング魚データベース</title>
   <style>
     body {
       font-family: sans-serif;
@@ -574,7 +574,7 @@ async function initData() {
         }
       }
   // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
-    renderIconBar();
+    renderIconBar("next");
       
   // ── 追加: Cボタンで該当セレクトをクリア ──
     document.querySelectorAll('.clear-btn').forEach(btn => {
@@ -754,7 +754,7 @@ function populateGroupSelect(allGroups) {
      }));
 
     currentIndex = 0;
-    renderIconBar();
+    renderIconBar("next");
     isGroupFixed = false;  //仕様変更：グループがコンボで選ばれたら、頭出しのみの機能とする
     // 先頭動画を再生
     currentIndex = 0;
@@ -791,7 +791,7 @@ function populatePlaceSelect(list) {
     // 【追加】Place変更時は fishSelect をクリア
       const fishSel = document.getElementById('fishSelect');
       fishSel.value = '';
-      renderIconBar();
+      renderIconBar("next");
     });
   }
 
@@ -843,7 +843,7 @@ function populateFishSelect(list) {
   currentIndex = idx >= 0 ? idx : 0;
       
   // 4) アイコンバー再描画→メタ更新→再生 or キュー
-  renderIconBar();
+  renderIconBar("next");
   updateFishInfo(fishObj);
   //仕様変更：魚選択は頭だしのみの機能に変更
   const entry = videoIds[currentIndex];
@@ -898,6 +898,11 @@ function onYouTubeIframeAPIReady() {
     width: "640",
 
     playerVars: {
+      /*デプロイしたとき、本チャンでは無音でないと自動再生しない */
+      autoplay: 1,     // 自動再生要求（ポリシー判定用）
+      mute: 1,         // ミュート指定
+      playsinline: 1,  // iOSでインライン再生
+    
       controls:        0,  // コントロールバー非表示
       disablekb:       1,  // キーボード操作無効化
       modestbranding:  1,  // ロゴ最小表示
@@ -920,7 +925,12 @@ function onYouTubeIframeAPIReady() {
  * - videos: 現在のグループの動画リスト（FishID, YouTubeURL,... の配列）
  * - fishes: 全魚メタデータ（FishID, Name, IconURL,... の配列）
  */
-function renderIconBar() {
+/**
+ * アイコンバー描画＋場所フィルタ後のグループスキップ
+ * @param {"next"|"prev"} direction - スキップ方向
+ */
+function renderIconBar(direction) {
+//function renderIconBar() {
   const bar = document.getElementById('iconBar');
   bar.innerHTML = '';           // 一旦クリア
   const selectedPlace = document.getElementById('placeSelect').value;
@@ -984,7 +994,20 @@ function renderIconBar() {
   });
 
    if (!document.getElementById('fishSelect').value) {
-     const sortedVideos = videos.slice().sort((a, b) => {
+
+      // 場所フィルタ：選択があればその場所の動画のみ、なければ次グループか前グループへ
+      const sel = document.getElementById('placeSelect').value;
+      const filteredVideos = sel
+        ? videos.filter(v => v.撮影場所 === sel)
+        : videos.slice();
+      
+      if (sel && filteredVideos.length === 0) {
+       console.warn('[renderIconBar] no videos at place, skipping', currentGroupId);
+       return direction === 'prev' ? prevGroup() : nextGroup();
+      }
+
+      const sortedVideos = filteredVideos.slice().sort((a, b) => {
+//    const sortedVideos = videos.slice().sort((a, b) => {
        // 1) 魚名（あーわ順）
        const fa = fishes.find(f => f.FishID === a.FishID);
        const fb = fishes.find(f => f.FishID === b.FishID);
@@ -1202,8 +1225,8 @@ async function nextGroup() {
     currentIndex = 0;
 
     // 3) アイコンバーを再描画
-    renderIconBar();
-    // 4) 先頭動画を load→play もしくは cue
+    renderIconBar("next");
+    // 4) 先頭動画を load→play もしくは cue    
     if (videoIds.length > 0) {
       const entry = videoIds[0];
       const fish  = fishes.find(f => f.FishID === entry.fishId);
@@ -1213,16 +1236,20 @@ async function nextGroup() {
         );
         updateFishInfo(fish);
         updateVideoMeta(video);
-        // repeatMode フラグで再生 or キューを振り分け
+      
+        // オープニングビデオ以外、ミュート解除
+      if (typeof OPENING_GROUP_ID !== 'undefined' && currentGroupId !== OPENING_GROUP_ID) window.ytPlayer?.unMute?.();
+
+      // repeatMode フラグで再生 or キューを振り分け
       if (repeatMode) {
-       // グループ最初の動画を読み込んで再生
+      // グループ最初の動画を読み込んで再生
         const vid = entry.videoId;
         if (vid) {
           window.ytPlayer.loadVideoById(vid);
           window.ytPlayer.playVideo();
         }
       } else {
-       // 再生せずキューだけ
+      // 再生せずキューだけ
         const vid = entry.videoId;
         if (vid) {
           window.ytPlayer.cueVideoById(vid);
@@ -1261,7 +1288,7 @@ async function prevGroup() {
     }));
     currentIndex = 0;
     // 3) アイコンバーを再描画
-    renderIconBar();
+    renderIconBar("prev");
     // 4) ★nextGroup と同じ再生制御ブロック
     if (videoIds.length > 0) {
       const entry = videoIds[0];

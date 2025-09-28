@@ -8901,8 +8901,8 @@ const VIDEOS = [
     "label": "沖ノ島2014"
   },
   {
-    "GroupID": 55,
-    "FishID": 419,
+    "GroupID": 50,
+    "FishID": 412,
     "YouTubeURL": "https://youtu.be/9QhYyD7fkwY",
     "ytid": "9QhYyD7fkwY",
     "撮影年": 2012,
@@ -8911,8 +8911,8 @@ const VIDEOS = [
     "label": "牟岐2012"
   },
   {
-    "GroupID": 55,
-    "FishID": 419,
+    "GroupID": 50,
+    "FishID": 412,
     "YouTubeURL": "https://youtu.be/d3X_SN8LUWs",
     "ytid": "d3X_SN8LUWs",
     "撮影年": 2013,
@@ -8921,8 +8921,8 @@ const VIDEOS = [
     "label": "牟岐2013"
   },
   {
-    "GroupID": 55,
-    "FishID": 419,
+    "GroupID": 50,
+    "FishID": 412,
     "YouTubeURL": "https://youtu.be/y9o-CwL9QzU",
     "ytid": "y9o-CwL9QzU",
     "撮影年": 2014,
@@ -8931,8 +8931,8 @@ const VIDEOS = [
     "label": "牟岐2014"
   },
   {
-    "GroupID": 55,
-    "FishID": 419,
+    "GroupID": 50,
+    "FishID": 412,
     "YouTubeURL": "https://youtu.be/eylWNPwR_6A",
     "ytid": "eylWNPwR_6A",
     "撮影年": 2015,
@@ -18645,6 +18645,48 @@ const VIDEOS_BY_FISH = {
       "label": "白浜2015"
     }
   ],
+  "412": [
+    {
+      "GroupID": 50,
+      "FishID": 412,
+      "YouTubeURL": "https://youtu.be/9QhYyD7fkwY",
+      "ytid": "9QhYyD7fkwY",
+      "撮影年": 2012,
+      "撮影場所": "牟岐",
+      "動画ファイル名": "牟岐2012ダイジェスト_01",
+      "label": "牟岐2012"
+    },
+    {
+      "GroupID": 50,
+      "FishID": 412,
+      "YouTubeURL": "https://youtu.be/d3X_SN8LUWs",
+      "ytid": "d3X_SN8LUWs",
+      "撮影年": 2013,
+      "撮影場所": "牟岐",
+      "動画ファイル名": "牟岐2013ダイジェスト_02",
+      "label": "牟岐2013"
+    },
+    {
+      "GroupID": 50,
+      "FishID": 412,
+      "YouTubeURL": "https://youtu.be/y9o-CwL9QzU",
+      "ytid": "y9o-CwL9QzU",
+      "撮影年": 2014,
+      "撮影場所": "牟岐",
+      "動画ファイル名": "牟岐2014ダイジェスト_04",
+      "label": "牟岐2014"
+    },
+    {
+      "GroupID": 50,
+      "FishID": 412,
+      "YouTubeURL": "https://youtu.be/eylWNPwR_6A",
+      "ytid": "eylWNPwR_6A",
+      "撮影年": 2015,
+      "撮影場所": "牟岐",
+      "動画ファイル名": "牟岐2015ダイジェスト_03",
+      "label": "牟岐2015"
+    }
+  ],
   "413": [
     {
       "GroupID": 51,
@@ -18748,46 +18790,6 @@ const VIDEOS_BY_FISH = {
     }
   ],
   "419": [
-    {
-      "GroupID": 55,
-      "FishID": 419,
-      "YouTubeURL": "https://youtu.be/9QhYyD7fkwY",
-      "ytid": "9QhYyD7fkwY",
-      "撮影年": 2012,
-      "撮影場所": "牟岐",
-      "動画ファイル名": "牟岐2012ダイジェスト_01",
-      "label": "牟岐2012"
-    },
-    {
-      "GroupID": 55,
-      "FishID": 419,
-      "YouTubeURL": "https://youtu.be/d3X_SN8LUWs",
-      "ytid": "d3X_SN8LUWs",
-      "撮影年": 2013,
-      "撮影場所": "牟岐",
-      "動画ファイル名": "牟岐2013ダイジェスト_02",
-      "label": "牟岐2013"
-    },
-    {
-      "GroupID": 55,
-      "FishID": 419,
-      "YouTubeURL": "https://youtu.be/y9o-CwL9QzU",
-      "ytid": "y9o-CwL9QzU",
-      "撮影年": 2014,
-      "撮影場所": "牟岐",
-      "動画ファイル名": "牟岐2014ダイジェスト_04",
-      "label": "牟岐2014"
-    },
-    {
-      "GroupID": 55,
-      "FishID": 419,
-      "YouTubeURL": "https://youtu.be/eylWNPwR_6A",
-      "ytid": "eylWNPwR_6A",
-      "撮影年": 2015,
-      "撮影場所": "牟岐",
-      "動画ファイル名": "牟岐2015ダイジェスト_03",
-      "label": "牟岐2015"
-    },
     {
       "GroupID": 55,
       "FishID": 419,
