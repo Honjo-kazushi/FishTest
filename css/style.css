@@ -1,0 +1,293 @@
+/* ===================================================================
+   css/style.css
+   外部に分離したスタイル定義ファイル
+   =================================================================== */
+
+/* ===================================================================
+   1. リセット＆ベース
+   =================================================================== */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #eef6fb;
+}
+
+/* ===================================================================
+   2. レイアウト
+   =================================================================== */
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.left-panel {
+  flex: 0 0 600px;
+  max-width: 600px;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel {
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ===================================================================
+   3. コンポーネント
+   =================================================================== */
+#player {
+  width: 100%;
+  aspect-ratio: 16/9;
+  margin: 0;
+  padding: 0;
+}
+
+#currentFishImage {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  margin: 10px auto;
+}
+
+.video-meta {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #333;
+  margin: 2px 0;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4px 1rem 10px;
+  background: #e0f0f7;
+}
+
+.toggle-button {
+  appearance: none;
+  width: 40px;
+  height: 20px;
+  background: #ccc;
+  border-radius: 10px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+}
+.toggle-button:checked {
+  background: #4caf50;
+}
+.toggle-button::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+.toggle-button:checked::before {
+  transform: translateX(20px);
+}
+
+.fish-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.fish-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.fish-feature {
+  align-self: flex-start;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.5rem;
+}
+
+#fishIcon {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
+.icon-bar {
+  display: flex;
+  overflow-x: auto;
+  padding: 0.2rem;
+  background: #dff0f7;
+  border-top: 1px solid #ccc;
+  gap: 4px;
+}
+
+.icon-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.fish-icon {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: 80px;
+  cursor: pointer;
+}
+.fish-icon img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+.fish-icon span,
+.fish-label {
+  display: block;
+  margin-top: 1px;
+  font-size: 0.7rem;
+  white-space: normal;
+  line-height: 1.1;
+  color: #333;
+  text-align: center;
+}
+
+.fish-icon-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  margin: 2px 4px;
+}
+
+.filter-panel.small {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 1rem 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select-clear-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.select-clear-wrapper select,
+.select-clear-wrapper select[size] {
+  width: 200px !important;
+  min-width: 120px !important;
+}
+.dropup select[size] {
+  width: auto !important;
+  min-width: 120px !important;
+}
+.dropup.select-clear-wrapper select[size] {
+  width: auto !important;
+  min-width: 120px !important;
+}
+#filters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.dropup {
+  position: relative;
+  display: inline-block;
+}
+.dropup select[size] {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 1000;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.kana-buttons button {
+  transition: box-shadow 0.1s, transform 0.1s;
+}
+.kana-buttons button.active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.3);
+  transform: translateY(2px);
+}
+
+.header-image {
+  max-height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* ===================================================================
+   4. メディアクエリ（スマホ向け）
+   =================================================================== */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+  #player {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.5rem 1rem;
+  }
+  .controls button {
+    flex: 0 0 calc(25% - 0.3rem);
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  .icon-bar {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .icon-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .fish-icon img {
+    width: 60px;
+    height: 60px;
+  }
+  .fish-label {
+    font-size: 0.6rem;
+  }
+  .video-meta {
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+  }
+}
