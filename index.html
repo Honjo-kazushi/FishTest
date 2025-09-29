@@ -68,6 +68,16 @@
       </div>
      </div>
     </div>
+  <!-- ====== BEGIN: Audio Selection Modal ====== -->
+  <div id="audioModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>ようこそ FishPedia へ！</h2>
+      <p>動画の音声をオンにしますか？</p>
+      <button id="btnAudioOn">オンで開始</button>
+      <button id="btnAudioOff">無音で続ける</button>
+    </div>
+  </div>
+  <!-- ====== END: Audio Selection Modal ====== -->
 
   <div class="right-panel">
 
@@ -693,6 +703,28 @@ function updateVideoMeta(video) {
   document.getElementById("videoFile").textContent = video.動画ファイル名 || "";
 }
 
+// — モーダル要素を取得 —
+const audioModal = document.getElementById('audioModal');
+const btnOn  = document.getElementById('btnAudioOn');
+const btnOff = document.getElementById('btnAudioOff');
+
+// モーダルを表示する関数
+function showAudioModal() {
+  return new Promise(resolve => {
+    audioModal.style.display = 'flex';
+    const clean = () => {
+      audioModal.style.display = 'none';
+      btnOn.removeEventListener('click', onOn);
+      btnOff.removeEventListener('click', onOff);
+    };
+    const onOn = () => { clean(); resolve('on'); };
+    const onOff = () => { clean(); resolve('off'); };
+    btnOn.addEventListener('click', onOn);
+    btnOff.addEventListener('click', onOff);
+  });
+}
+
+
 /**
  * fishId の動画を再生またはキューに登録し、情報更新も行う
  * @param {number} fishId
@@ -739,8 +771,8 @@ function onPlayerStateChange(event) {
   // ── 通常ステートハンドリング ──
   switch (event.data) {
     case YT.PlayerState.ENDED:
-    
-     // ── 先にガードしておく ──
+
+    // ── 先にガードしておく ──
       if (!videoIds[currentIndex]) {
         console.warn('no entry at index', currentIndex, 'queue=', videoIds);
         return;
@@ -757,9 +789,30 @@ function onPlayerStateChange(event) {
               const entry0 = videoIds[0];
               playVideoByFish(entry0.fishId, entry0.videoId);
             } else {
+              if (currentGroupId === OPENING_GROUP_ID) {
               // 通常モード：次グループへ
-              nextGroup();
-            }  
+                nextGroup();
+              // ２）モーダルだけ表示してユーザーに選択を促す
+
+              const playerInstance = event.target;
+              showAudioModal().then(choice => {
+                if (choice === 'on') {
+                  if (playerInstance.getPlayerState() === YT.PlayerState.PLAYING) {
+                    playerInstance.pauseVideo();
+                  }
+                  playerInstance.unMute();               // ミュート解除フラグ
+                  //playerInstance.setVolume(100);         // ボリューム最大（任意）
+                  // 再度再生命令を出す
+                  playerInstance.playVideo();    
+                } else {
+                  playerInstance.mute();                 // 無音継続
+                }
+              });                
+              } else {
+              // 通常モード：次グループへ
+                nextGroup();
+              }  
+            }
         }
       } else {
         // repeatMode OFF → オーバーレイ表示のみ
@@ -878,10 +931,7 @@ async function nextGroup() {
         );
         updateFishInfo(fish);
         updateVideoMeta(video);
-      
-        // オープニングビデオ以外、ミュート解除
-      if (typeof OPENING_GROUP_ID !== 'undefined' && currentGroupId !== OPENING_GROUP_ID) window.ytPlayer?.unMute?.();
-
+        
       // repeatMode フラグで再生 or キューを振り分け
       if (repeatMode) {
       // グループ最初の動画を読み込んで再生

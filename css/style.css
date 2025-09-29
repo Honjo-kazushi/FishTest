@@ -13,15 +13,46 @@ html, body {
   background: #eef6fb;
 }
 
+/* Audio Modal */
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: #fff; padding: 1.5rem; border-radius: .5rem;
+  text-align: center; max-width: 90%;
+}
+.modal-content button {
+  margin: .5rem; padding: .5rem 1rem; cursor: pointer;
+}
+
 /* ===================================================================
    2. レイアウト
    =================================================================== */
+/* ────────────────────────────────── */
+/* PC／タブレット含む全体でプレイヤー幅を最大608pxに制限 */
+/* ────────────────────────────────── */
+#playerContainer {
+  width: 100%;        /* コンテナ幅は親にフィット */
+  max-width: 608px;   /* 最大幅を608pxに */
+  margin: 0 auto;     /* 中央寄せ */
+}
 .container {
   display: flex;
   flex-direction: row-reverse;
   flex-wrap: nowrap;
   align-items: flex-start;
+  justify-content: flex-start;  /* ← アイテムを左寄せ */
   gap: 1rem;
+
+  /* ────────────────────────────────── */
+  /* コンテナ幅を 1208px に固定し、画面幅以下で縮小 */
+  /* ────────────────────────────────── */
+  width: 100%;
+  max-width: 1208px;  /* 左パネル600 + 右パネル608 */
+  margin: 0 auto;     /* ← 画面中央に配置 */
 }
 
 .left-panel {
@@ -34,21 +65,24 @@ html, body {
 }
 
 .right-panel {
-  flex: 1;
+  /* 右パネルも最大幅を 608px に固定 */
+  flex: 0 0 608px;      /* 固定幅の要素に */
+  max-width: 608px;     /* 最大幅を指定 */
   padding: 1rem;
   box-sizing: border-box;
   overflow: hidden;
+  margin: 0 auto;       /* 中央に寄せたい場合 */
 }
 
 /* ===================================================================
    3. コンポーネント
    =================================================================== */
 #player {
-  width: 100%;
-  aspect-ratio: 16/9;
-  margin: 0;
-  padding: 0;
-}
+  width: 100%;             /* 親幅いっぱいに広げつつ… */
+  max-width: 608px;        /* 最大幅を 608px に制限 */
+  aspect-ratio: 608 / 360; /* 高さは 608×360 の比率で自動計算 */
+  margin: 0 auto;          /* 幅制限後は中央寄せ */
+  padding: 0;}
 
 #currentFishImage {
   width: 150px;
@@ -302,13 +336,24 @@ html, body {
   
 /* モバイル横表示（ランドスケープ）：左右並びに戻す */
 @media (max-width: 768px) and (orientation: landscape) {
-  .container {
-    flex-direction: row-reverse;
-    gap: 1rem;
+  /* グローバルの max-width:1208px をリセットして幅100%に */
+  .container { max-width: none !important; width: 100% !important; }
+
+  /* 左右パネルの比率はそのまま */
+  .left-panel {
+    flex: 0 0 40%;
+    max-width: 40%;
   }
-  .left-panel,
   .right-panel {
-    flex: 1;
-    width: auto;
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+
+  /* プレイヤーもパネル幅いっぱい */
+  #playerContainer,
+  #player {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
   }
 }
