@@ -3,366 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fish Viewer - ダイビング魚データベース</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      background: #eef6fb;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: stretch;
-    }
-    .left-panel, .right-panel {
-      box-sizing: border-box;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-    .left-panel {
-      flex: 1 1 300px;
-      max-width: 600px;  /* または max-width: none; */
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .right-panel {
-      flex: 0 0 640px;
-      max-width: 640px;
-      overflow: hidden;
-    }
-    .fish-feature {
-      margin-top: 1rem;
-    }
-    .feature-text {
-      max-width: 100%;
-      white-space: pre-wrap; /* 改行を保持して折り返す */
-      word-wrap: break-word;
-    }
-    #player {
-      width: 100%;
-      max-width: 640px;
-      aspect-ratio: 16 / 9;
-      margin: 0;
-      display: block;
-      margin: 0 !important;       /* ← 中央寄せを強制解除 */
-      padding: 0;
-    }
-    #currentFishImage {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-      display: block;
-      margin: 10px auto;
-    }
-    .video-meta {
-      display: flex;
-      justify-content: flex-start;  /* ← 左寄せに変更 */
-      gap: 1rem;                     /* ← アイテム間に等間隔 */
-      font-size: 0.8rem;
-      color: #333;
-      margin: 2px 0;
-      padding: 0 1rem;
-      flex-wrap: wrap;               /* ← 狭いとき折り返す */
-    }
-    .controls {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 4px 1rem 10px 1rem;
-      background: #e0f0f7;
-    }
-    .toggle-button {
-      appearance: none;
-      width: 40px;
-      height: 20px;
-      background: #ccc;
-      border-radius: 10px;
-      position: relative;
-      outline: none;
-      cursor: pointer;
-    }
-    .toggle-button:checked {
-      background: #4caf50;
-    }
-    .toggle-button::before {
-      content: "";
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 16px;
-      height: 16px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.2s;
-    }
-    .toggle-button:checked::before {
-      transform: translateX(20px);
-    }
-
-    /* ① 親要素を flex にして横並び */
-    .fish-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;    /* アイコンとテキストの間隔 */
-    }
-
-    /* ② テキスト部を縦に並べる */
-    .fish-info {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.25rem;
-    }
-
-    /* もしくは fish-feature 要素だけ左詰めに */
-    .fish-feature {
-      align-self: flex-start;   /* ← ここを追加 */
-      /* 必要であれば幅も指定できます */
-      width: 100%;
-      text-align: left;
-      margin-bottom: 0.5rem;    /* 例：2rem (=32px) の余白 */
-    }
-
-    #fishIcon {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;    /* アスペクト比を保って中央にフィット */
-      border-radius: 10px;
-      margin-top: 10px;
-      align-self: flex-start;
-    }
-
-    .icon-bar {
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 0.1rem 0.2rem;
-      margin-top: 0.1rem;
-      background: #dff0f7;
-      border-top: 1px solid #ccc;
-    }
-  
-    .fish-icon {
-      display: inline-block;
-      text-align: center;
-      width: 80px;
-      word-wrap: break-word;
-      overflow-wrap:break-word;
-      vertical-align: top;
-      margin: 0 4px;
-      cursor: pointer;
-    }
-  
-    .fish-icon img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-    }
-  
-    .fish-icon span {
-      display: block;
-      margin-top: 1px;
-      font-size: 0.7rem;
-      white-space: normal;
-      line-height: 1.1;
-      color: #333;
-    }
-
-    .fish-icon-wrapper {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      /* アイコンと名前の隙間を1pxに */
-      gap: 1px;
-      /* 周囲の余白を少し縮める */
-      margin: 2px 4px;
-    }
-  
-    .fish-label {
-      font-size: 0.75em;
-      /* 不要な余白を完全にリセット */
-      margin: 0;
-      text-align: center;
-      color: #333;
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-    
-      /* 左右パネルをともにフル幅に */
-      .left-panel,
-      .right-panel {
-        flex: 0 0 100%;
-        max-width: none;
-        padding: 0.5rem 1rem;
-      }
-    
-      /* 2. プレイヤー＆アイコンリサイズ */
-      #player {
-        width: 100% !important;
-        height: auto !important;
-        aspect-ratio: 16/9;
-      }
-    
-      .icon-bar {
-        display: flex;                  /* 横並び */
-        overflow-x: auto;               /* 横スクロール */
-        -webkit-overflow-scrolling: touch; /* スムーズスクロール */
-        gap: 0.5rem;                    /* アイコン間隔 */
-        padding: 0.5rem 1rem;           /* 左右余白 */
-      }
-    
-      .icon-bar::-webkit-scrollbar {    /* お好みでスクロールバー非表示 */
-        display: none;
-      }
-    
-      .fish-icon img {
-        width: 60px;
-        height: 60px;
-      }
-    
-      .fish-label {
-        font-size: 0.6rem;
-      }
-
-      /* 3. コントロール＆メタ情報再配置 */
-      .controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.3rem;           /* ボタン間の隙間を詰める */
-        justify-content: center;
-        padding: 0.5rem 1rem;
-      }
-        /* ここを追加：ボタン個別の調整 */
-      .controls button {
-        flex: 0 0 calc(25% - 0.3rem);
-        padding: 0.3rem 0.5rem; /* ボタンを小さく */
-        font-size: 0.8rem;      /* 文字サイズを少し下げる */
-        box-sizing: border-box;
-        min-width: 0;           /* 狭い場合でも縮むように */
-      }
-    
-      .video-meta {
-        flex-direction: column;
-        align-items: center;
-        font-size: 0.7rem;
-        line-height: 1.4;
-        gap: 0.25rem;
-        padding: 0.5rem 1rem;
-      }
-    
-      /* ヘッダー画像 */
-      .header-image {
-        max-height: 200px;
-        object-fit: cover;
-        width: 100%;
-      }
-    }
-
-      /* ① メディアクエリの外側に置くこと */
-      .container {
-        display: flex;
-        flex-wrap: nowrap;       /* 折り返し禁止 */
-        align-items: flex-start; /* 上端揃え */
-        gap: 1rem;               /* 左右の間隔 */
-    }
-
-      /* ② 左パネルの幅を固定（必要なら微調整） */
-      .left-panel {
-        flex: 0 0 600px;         /* 左パネルは300pxで固定 */
-    }
-
-      /* ③ 右パネルは残り幅を全て使う */
-      .right-panel {
-        flex: 1;                 /* 残り幅を占有 */
-    }
-
-      /* ── ここから下を“既存のすべての /*…*/ コメント”よりも後に置いてください ── */
-      /* フィルターパネル全体を縦積みかつ左パネル幅いっぱいに広げる */
-      .filter-panel.small {
-        display: flex;
-        flex-direction: column;  /* 上：かなボタン、下：セレクト群 */
-        gap: 0.5rem;             /* ブロック間の縦間隔 */
-        align-items: flex-start;   /* ← ここで左寄せ */
-        margin: 1rem 0;          /* 前後の余白 */
-        width: 100%;             /* 左パネル内で横幅100% */
-        box-sizing: border-box;  /* padding込みで幅を計算 */
-    }
-
-
-      /* ② セレクト＋Cボタンをインラインで */
-      .select-clear-wrapper {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-      /* ③ セレクトは自動幅 or 任意の最小幅 */
-      .select-clear-wrapper select,
-      .select-clear-wrapper select[size] {
-        width: 200px !important;         /* 元に戻す */
-        min-width: 120px !important;    /* お好みで */
-    }
-
-      /* ── ドロップアップ開時のリストにも幅を担保 ── */
-      .dropup select[size] {
-        width: auto !important;
-        min-width: 120px !important;
-    }
-
-      /* セレクト群を横並びにする（既存のまま） */
-      #filters {
-        display: flex;
-        flex-direction: column;  /* 縦並び */
-        align-items: flex-start;   /* ← 左寄せ */
-        gap: 0.5rem;             /* 行間の余白 */
-    }
-
-      /* ← 既存の override より下、<style>の最後に追記 */
-      .select-clear-wrapper.dropup select[size],
-      .dropup.select-clear-wrapper select[size] {
-        width: auto !important;
-        min-width: 120px !important;
-    }
-
-
-
-       /* 既存のスタイル */
-       /* ドロップアップ仕様：fishSelect が size 属性付きのとき上に展開 */
-      .dropup {
-        position: relative;
-        display: inline-block;
-    }
- 
-      .dropup select[size] {
-        position: absolute;
-        bottom: 100%;
-        left: 0;
-        z-index: 1000;
-        background: #fff; /* 必要なら */
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-        /* ── kana-buttons 押された見た目 ── */
-      .kana-buttons button {
-        transition: box-shadow 0.1s, transform 0.1s;
-    }
-
-      .kana-buttons button.active {
-        box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.3);
-        transform: translateY(2px);
-   }
-
-</style>
+  <title>ダイビング魚データベース</title>
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
   <div class="container">
@@ -574,7 +216,7 @@ async function initData() {
         }
       }
   // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
-    renderIconBar();
+    renderIconBar("next");
       
   // ── 追加: Cボタンで該当セレクトをクリア ──
     document.querySelectorAll('.clear-btn').forEach(btn => {
@@ -754,7 +396,7 @@ function populateGroupSelect(allGroups) {
      }));
 
     currentIndex = 0;
-    renderIconBar();
+    renderIconBar("next");
     isGroupFixed = false;  //仕様変更：グループがコンボで選ばれたら、頭出しのみの機能とする
     // 先頭動画を再生
     currentIndex = 0;
@@ -791,7 +433,7 @@ function populatePlaceSelect(list) {
     // 【追加】Place変更時は fishSelect をクリア
       const fishSel = document.getElementById('fishSelect');
       fishSel.value = '';
-      renderIconBar();
+      renderIconBar("next");
     });
   }
 
@@ -843,7 +485,7 @@ function populateFishSelect(list) {
   currentIndex = idx >= 0 ? idx : 0;
       
   // 4) アイコンバー再描画→メタ更新→再生 or キュー
-  renderIconBar();
+  renderIconBar("next");
   updateFishInfo(fishObj);
   //仕様変更：魚選択は頭だしのみの機能に変更
   const entry = videoIds[currentIndex];
@@ -898,6 +540,11 @@ function onYouTubeIframeAPIReady() {
     width: "640",
 
     playerVars: {
+      /*デプロイしたとき、本チャンでは無音でないと自動再生しない */
+      autoplay: 1,     // 自動再生要求（ポリシー判定用）
+      mute: 1,         // ミュート指定
+      playsinline: 1,  // iOSでインライン再生
+    
       controls:        0,  // コントロールバー非表示
       disablekb:       1,  // キーボード操作無効化
       modestbranding:  1,  // ロゴ最小表示
@@ -920,7 +567,12 @@ function onYouTubeIframeAPIReady() {
  * - videos: 現在のグループの動画リスト（FishID, YouTubeURL,... の配列）
  * - fishes: 全魚メタデータ（FishID, Name, IconURL,... の配列）
  */
-function renderIconBar() {
+/**
+ * アイコンバー描画＋場所フィルタ後のグループスキップ
+ * @param {"next"|"prev"} direction - スキップ方向
+ */
+function renderIconBar(direction) {
+//function renderIconBar() {
   const bar = document.getElementById('iconBar');
   bar.innerHTML = '';           // 一旦クリア
   const selectedPlace = document.getElementById('placeSelect').value;
@@ -984,7 +636,20 @@ function renderIconBar() {
   });
 
    if (!document.getElementById('fishSelect').value) {
-     const sortedVideos = videos.slice().sort((a, b) => {
+
+      // 場所フィルタ：選択があればその場所の動画のみ、なければ次グループか前グループへ
+      const sel = document.getElementById('placeSelect').value;
+      const filteredVideos = sel
+        ? videos.filter(v => v.撮影場所 === sel)
+        : videos.slice();
+      
+      if (sel && filteredVideos.length === 0) {
+       console.warn('[renderIconBar] no videos at place, skipping', currentGroupId);
+       return direction === 'prev' ? prevGroup() : nextGroup();
+      }
+
+      const sortedVideos = filteredVideos.slice().sort((a, b) => {
+//    const sortedVideos = videos.slice().sort((a, b) => {
        // 1) 魚名（あーわ順）
        const fa = fishes.find(f => f.FishID === a.FishID);
        const fb = fishes.find(f => f.FishID === b.FishID);
@@ -1202,8 +867,8 @@ async function nextGroup() {
     currentIndex = 0;
 
     // 3) アイコンバーを再描画
-    renderIconBar();
-    // 4) 先頭動画を load→play もしくは cue
+    renderIconBar("next");
+    // 4) 先頭動画を load→play もしくは cue    
     if (videoIds.length > 0) {
       const entry = videoIds[0];
       const fish  = fishes.find(f => f.FishID === entry.fishId);
@@ -1213,16 +878,20 @@ async function nextGroup() {
         );
         updateFishInfo(fish);
         updateVideoMeta(video);
-        // repeatMode フラグで再生 or キューを振り分け
+      
+        // オープニングビデオ以外、ミュート解除
+      if (typeof OPENING_GROUP_ID !== 'undefined' && currentGroupId !== OPENING_GROUP_ID) window.ytPlayer?.unMute?.();
+
+      // repeatMode フラグで再生 or キューを振り分け
       if (repeatMode) {
-       // グループ最初の動画を読み込んで再生
+      // グループ最初の動画を読み込んで再生
         const vid = entry.videoId;
         if (vid) {
           window.ytPlayer.loadVideoById(vid);
           window.ytPlayer.playVideo();
         }
       } else {
-       // 再生せずキューだけ
+      // 再生せずキューだけ
         const vid = entry.videoId;
         if (vid) {
           window.ytPlayer.cueVideoById(vid);
@@ -1261,7 +930,7 @@ async function prevGroup() {
     }));
     currentIndex = 0;
     // 3) アイコンバーを再描画
-    renderIconBar();
+    renderIconBar("prev");
     // 4) ★nextGroup と同じ再生制御ブロック
     if (videoIds.length > 0) {
       const entry = videoIds[0];

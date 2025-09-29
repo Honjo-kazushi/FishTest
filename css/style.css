@@ -18,6 +18,7 @@ html, body {
    =================================================================== */
 .container {
   display: flex;
+  flex-direction: row-reverse;
   flex-wrap: nowrap;
   align-items: flex-start;
   gap: 1rem;
@@ -244,10 +245,17 @@ html, body {
 /* ===================================================================
    4. メディアクエリ（スマホ向け）
    =================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (orientation: portrait) {
+  /* モバイル縦表示：右パネルを上、左パネルを下に縦並び、隙間ナシ */
   .container {
-    flex-direction: column;
-    flex-wrap: nowrap;
+    flex-direction: column-reverse;
+    gap: 0;
+  }
+  .left-panel,
+  .right-panel {
+    flex: none;
+    width: 100%;
+    margin: 0;
   }
   #player {
     width: 100% !important;
@@ -289,5 +297,18 @@ html, body {
     line-height: 1.4;
     gap: 0.25rem;
     padding: 0.5rem 1rem;
+  }
+}
+  
+/* モバイル横表示（ランドスケープ）：左右並びに戻す */
+@media (max-width: 768px) and (orientation: landscape) {
+  .container {
+    flex-direction: row-reverse;
+    gap: 1rem;
+  }
+  .left-panel,
+  .right-panel {
+    flex: 1;
+    width: auto;
   }
 }
