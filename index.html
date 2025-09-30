@@ -73,6 +73,7 @@
     <div class="modal-content">
       <h2>ようこそ FishPedia へ！</h2>
       <p>動画の音声をオンにしますか？</p>
+      <p>オン/オフは🔊のクリックでもできます！</p>
       <button id="btnAudioOn">オンで開始</button>
       <button id="btnAudioOff">無音で続ける</button>
     </div>
@@ -89,13 +90,14 @@
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 1; z-index: 2; transition: opacity 0.3s ease;" />
     </div>
 
-      <div class="controls" style="display: flex; align-items: center; gap: 0.5rem; padding: 10px; background: #e0f0f7; width: fit-content; margin-left: 1rem;">
+      <div class="controls">
   <!-- トグルスイッチ -->
   <label style="margin-right: 10px; display: inline-flex; align-items: center; gap: 0.5rem;">
     連続再生
     <input type="checkbox" id="repeatToggle" class="toggle-button" checked />
   </label>
 
+  <button id="muteBtn" aria-label="ミュート切替">🔇</button>
   <button onclick="prevGroup()">前Gr</button>
   <button onclick="prevVideo()">前へ</button>
   <button onclick="pauseVideo()">ポーズ</button>
@@ -160,6 +162,18 @@ let isGroupFixed = false;    // 手動でグループ選択されたら true
 
 // 現在の選択文字（""なら全表示）
 let currentLetter = "";
+
+const muteBtn = document.getElementById("muteBtn");
+muteBtn.addEventListener("click", () => {
+  if (!window.ytPlayer) return;
+  if (muteBtn.textContent === "🔇") {
+    window.ytPlayer.unMute();
+    muteBtn.textContent = "🔊";
+  } else {
+    window.ytPlayer.mute();
+    muteBtn.textContent = "🔇";
+  }
+});
 
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -801,7 +815,7 @@ function onPlayerStateChange(event) {
                     playerInstance.pauseVideo();
                   }
                   playerInstance.unMute();               // ミュート解除フラグ
-                  //playerInstance.setVolume(100);         // ボリューム最大（任意）
+                  muteBtn.textContent = "🔊";
                   // 再度再生命令を出す
                   playerInstance.playVideo();    
                 } else {

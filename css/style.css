@@ -104,12 +104,17 @@ html, body {
 }
 
 .controls {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 4px 1rem 10px;
-  background: #e0f0f7;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;   /* ← まずは左寄せに戻す */
+  gap:0.5rem;
+  padding:10px;
+  background:#e0f0f7;
+  width:100%;
+  max-width:640px;              /* ← プレイヤーと同じ幅 */
+  margin:0 auto;                /* ← 画面中央に配置 */
+  box-sizing:border-box;        /* ← paddingを幅に含めてはみ出し防止 */
+  flex-wrap:wrap;               /* ← 幅が足りない時は2段に逃がす */
 }
 
 .toggle-button {
