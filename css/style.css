@@ -2,6 +2,21 @@
    css/style.css
    外部に分離したスタイル定義ファイル
    =================================================================== */
+:root {
+  --gap: 1rem;  /* 全体の間隔をこの変数で管理 */
+}
+/* ── 全要素を border-box に統一 ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/* ───────────────────────────────────────────
+   6. Utilities（小規模ユーティリティ）
+   ─────────────────────────────────────────── */
+.mx-auto {
+  margin: 0 auto !important;  /* 横中央寄せ */
+}
 
 /* ===================================================================
    1. リセット＆ベース
@@ -38,14 +53,17 @@ html, body {
   width: 100%;        /* コンテナ幅は親にフィット */
   max-width: 608px;   /* 最大幅を608pxに */
   margin: 0 auto;     /* 中央寄せ */
+  position: relative;                  /* もしまだ無ければ追加 */
+  aspect-ratio: 16 / 9;      /* 動画比率 */
+  overflow: hidden;    /* はみ出し要素を隠す */
+  /* background は不要なら指定しなくてOK */
 }
 .container {
   display: flex;
   flex-direction: row-reverse;
   flex-wrap: nowrap;
   align-items: flex-start;
-  justify-content: flex-start;  /* ← アイテムを左寄せ */
-  gap: 1rem;
+  gap: var(--gap);
 
   /* ────────────────────────────────── */
   /* コンテナ幅を 1208px に固定し、画面幅以下で縮小 */
@@ -55,34 +73,37 @@ html, body {
   margin: 0 auto;     /* ← 画面中央に配置 */
 }
 
-.left-panel {
-  flex: 0 0 600px;
-  max-width: 600px;
+/* 共通 */
+.left-panel,
+.right-panel {
   padding: 1rem;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
+/* 個別 */
+.left-panel {
+  flex: 0 0 600px;
+  max-width: 600px;
+}
+
 .right-panel {
-  /* 右パネルも最大幅を 608px に固定 */
-  flex: 0 0 608px;      /* 固定幅の要素に */
-  max-width: 608px;     /* 最大幅を指定 */
-  padding: 1rem;
-  box-sizing: border-box;
+  flex: 0 0 608px;
+  max-width: 608px;
   overflow: hidden;
-  margin: 0 auto;       /* 中央に寄せたい場合 */
+  margin: 0 auto;
 }
 
 /* ===================================================================
    3. コンポーネント
    =================================================================== */
 #player {
-  width: 100%;             /* 親幅いっぱいに広げつつ… */
-  max-width: 608px;        /* 最大幅を 608px に制限 */
-  aspect-ratio: 608 / 360; /* 高さは 608×360 の比率で自動計算 */
-  margin: 0 auto;          /* 幅制限後は中央寄せ */
-  padding: 0;}
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 
 #currentFishImage {
   width: 150px;
@@ -103,6 +124,16 @@ html, body {
   flex-wrap: wrap;
 }
 
+.player-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
 .controls {
   display:flex;
   align-items:center;
@@ -143,6 +174,14 @@ html, body {
 }
 .toggle-button:checked::before {
   transform: translateX(20px);
+}
+
+/* トグルスイッチ用ラベル */
+.toggle-label {
+  margin-right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .fish-header {
@@ -284,8 +323,10 @@ html, body {
 /* ===================================================================
    4. メディアクエリ（スマホ向け）
    =================================================================== */
+
+/* モバイル縦表示（ポートレート：~768px） */
 @media (max-width: 768px) and (orientation: portrait) {
-  /* モバイル縦表示：右パネルを上、左パネルを下に縦並び、隙間ナシ */
+  /* 右パネルを上、左パネルを下に縦並び、隙間ナシ */
   .container {
     flex-direction: column-reverse;
     gap: 0;
@@ -299,6 +340,13 @@ html, body {
   #player {
     width: 100% !important;
     height: auto !important;
+  }
+    /* プレイヤー高さを2倍近くに拡大 */
+  html body #playerContainer {
+    height: calc(100vw * 9 / 8) !important;
+  }
+  html body #player {
+    height: 100% !important;
   }
   .controls {
     flex-wrap: wrap;
@@ -338,27 +386,36 @@ html, body {
     padding: 0.5rem 1rem;
   }
 }
-  
-/* モバイル横表示（ランドスケープ）：左右並びに戻す */
-@media (max-width: 768px) and (orientation: landscape) {
-  /* グローバルの max-width:1208px をリセットして幅100%に */
-  .container { max-width: none !important; width: 100% !important; }
 
-  /* 左右パネルの比率はそのまま */
-  .left-panel {
-    flex: 0 0 40%;
-    max-width: 40%;
+/* モバイル横表示（ランドスケープ：~950px） */
+@media only screen and (orientation: landscape) and (max-width: 950px) {
+  /* コンテナはそのまま縦スタック */
+  html body .container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column-reverse !important;
+    gap: var(--gap) !important;
   }
-  .right-panel {
-    flex: 0 0 60%;
-    max-width: 60%;
+  html body #playerContainer {
+    height: 80vh !important;
+    width: 90vw !important;
+    max-width: none !important;
+    margin: 0 auto !important;
   }
 
-  /* プレイヤーもパネル幅いっぱい */
-  #playerContainer,
-  #player {
+  html body #player {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  html body .left-panel,
+  html body .right-panel {
+    flex: none !important;
     width: 100% !important;
     max-width: 100% !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
   }
 }
