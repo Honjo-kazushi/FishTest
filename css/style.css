@@ -220,11 +220,22 @@ html, body {
   background: #dff0f7;
   border-top: 1px solid #ccc;
   gap: 4px;
+  scrollbar-width: auto;        /* Firefox 用 */
+  -ms-overflow-style: auto;     /* IE/Edge 用 */
 }
 
 .icon-bar::-webkit-scrollbar {
-  display: none;
+  height: 8px;                  /* スクロールバーの太さ */
 }
+
+.icon-bar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+/*.icon-bar::-webkit-scrollbar {
+  display: none;
+}*/
 
 .fish-icon {
   display: inline-flex;
@@ -341,10 +352,7 @@ html, body {
     width: 100% !important;
     height: auto !important;
   }
-    /* プレイヤー高さを2倍近くに拡大 */
-  html body #playerContainer {
-    height: calc(100vw * 9 / 8) !important;
-  }
+  
   html body #player {
     height: 100% !important;
   }
@@ -366,10 +374,12 @@ html, body {
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     -webkit-overflow-scrolling: touch;
+    overflow-x: auto;                  /* 横スクロールを有効に */
   }
-  .icon-bar::-webkit-scrollbar {
+  /*.icon-bar::-webkit-scrollbar {
     display: none;
-  }
+  }*/
+  
   .fish-icon img {
     width: 60px;
     height: 60px;
@@ -406,9 +416,11 @@ html, body {
   html body #player {
     position: absolute !important;
     top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
+    left: 50% !important;
+    height: 100% !important;    /* 親の高さにピッタリ合わせる */
+    width: auto !important;      /* アスペクト維持 */
+    min-width: 100% !important;  /* 横幅必ず画面幅以上にする */
+    transform: translateX(-50%) !important; /* 水平中央に */
   }
 
   html body .left-panel,
