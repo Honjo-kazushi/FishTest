@@ -111,7 +111,12 @@
         <div><strong>年:</strong> <span id="videoYear"></span></div>
         <div><strong>ファイル:</strong> <span id="videoFile"></span></div>
       </div>
-  
+
+      <div class="stats">
+        <spa class="stat-item">グループ数：<span id="stat-groups">0</span></span>
+        <span class="stat-item">,　魚数：<span id="stat-fishes">0</span></span>
+        <span class="stat-item">,　ビデオ数：<span id="stat-videos">0</span></span>
+      </div>
     </div>
   </div>
 
@@ -262,6 +267,10 @@ async function initData() {
       }
   // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
     renderIconBar("next");
+
+    const allVideos = VIDEOS.filter(v => v.GroupID !== OPENING_GROUP_ID);
+       // 初回に統計を描画
+    updateStats(allVideos);
       
   // ── 追加: Cボタンで該当セレクトをクリア ──
     document.querySelectorAll('.clear-btn').forEach(btn => {
@@ -966,8 +975,6 @@ async function nextGroup() {
         );
         updateFishInfo(fish);
         updateVideoMeta(video);
-
-      //  updateStats(videos);  
 
       // repeatMode フラグで再生 or キューを振り分け
       if (repeatMode) {

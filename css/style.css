@@ -113,7 +113,7 @@ html, body {
   margin: 10px auto;
 }
 
-.video-meta {
+.video-meta,.stats {
   display: flex;
   justify-content: flex-start;
   gap: 1rem;
@@ -122,6 +122,13 @@ html, body {
   margin: 2px 0;
   padding: 0 1rem;
   flex-wrap: wrap;
+}
+
+.stat-item {
+  display: inline-flex;
+  align-items: center;  /* 必要に応じて */
+  gap: 0;               /* 数字とラベルの間はHTML上の全角コロン or 全角読点で調整 */
+  white-space: nowrap;
 }
 
 .player-overlay {
@@ -379,7 +386,7 @@ html, body {
   /*.icon-bar::-webkit-scrollbar {
     display: none;
   }*/
-  
+
   .fish-icon img {
     width: 60px;
     height: 60px;
@@ -387,7 +394,7 @@ html, body {
   .fish-label {
     font-size: 0.6rem;
   }
-  .video-meta {
+  .video-meta,.stats{
     flex-direction: column;
     align-items: center;
     font-size: 0.7rem;
@@ -395,6 +402,7 @@ html, body {
     gap: 0.25rem;
     padding: 0.5rem 1rem;
   }
+ 
 }
 
 /* モバイル横表示（ランドスケープ：~950px） */
