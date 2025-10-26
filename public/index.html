@@ -59,15 +59,21 @@
           </select>
            <button type="button" class="clear-btn" data-target="placeSelect">C</button>
         </span>
-        <span class="select-clear-wrapper">
-          <select id="groupSelect">
-           <option value="">仲間を選択</option>
-          </select>
-           <button type="button" class="clear-btn" data-target="groupSelect">C</button>
-        </span>
-      </div>
-     </div>
+        <div class="group-counter-wrapper">
+          <span class="select-clear-wrapper"></span>
+            <select id="groupSelect">
+             <option value="">仲間を選択</option>
+            </select>
+             <button type="button" class="clear-btn" data-target="groupSelect">C</button>
+          </span>
+          <!-- アクセスカウンター表示 -->
+          <span class="counter-inline">
+           <small>　アクセス数：<span id="visitCount">…</span></small>
+          </span>
+        </div>
     </div>
+    </div>
+  </div>
   <!-- ====== BEGIN: Audio Selection Modal ====== -->
   <div id="audioModal" class="modal" style="display:none;">
     <div class="modal-content">
@@ -97,7 +103,7 @@
     <input type="checkbox" id="repeatToggle" class="toggle-button" checked />
   </label>
 
-  <button id="muteBtn" aria-label="ミュート切替">🔇</button>
+  <button id="muteBtn" aria-label="ミュート切替">🔊</button>
   <button onclick="prevGroup()">前Gr</button>
   <button onclick="prevVideo()">前へ</button>
   <button onclick="pauseVideo()">ポーズ</button>
@@ -111,12 +117,21 @@
         <div><strong>年:</strong> <span id="videoYear"></span></div>
         <div><strong>ファイル:</strong> <span id="videoFile"></span></div>
       </div>
-    </div>
 
+      <div class="stats">
+        <spa class="stat-item">グループ数：<span id="stat-groups">0</span></span>
+        <span class="stat-item">,　魚数：<span id="stat-fishes">0</span></span>
+        <span class="stat-item">,　ビデオ数：<span id="stat-videos">0</span></span>
+      </div>
+    </div>
   </div>
+
+
   <div class="icon-bar" id="iconBar"></div>
  </div>
 </div>
+
+
 
 </body>
 
@@ -124,6 +139,8 @@
 <script src="./js/videosData.js"></script> 
 <script src="./js/groupsData.js"></script>
 <script src="./js/placesData.js"></script>
+<!-- Firestore アクセスカウンター -->
+<script type="module" src="./js/counter.js"></script>
 
 <script>
 const MAX_GROUP = 56;
@@ -166,14 +183,33 @@ let currentLetter = "";
 const muteBtn = document.getElementById("muteBtn");
 muteBtn.addEventListener("click", () => {
   if (!window.ytPlayer) return;
-  if (muteBtn.textContent === "🔇") {
+  if (muteBtn.textContent === "🔊") {
     window.ytPlayer.unMute();
-    muteBtn.textContent = "🔊";
+    muteBtn.textContent = "🔇";
   } else {
     window.ytPlayer.mute();
-    muteBtn.textContent = "🔇";
+    muteBtn.textContent = "🔊";
   }
 });
+
+/**
+ * stats を再計算して画面に反映する
+ * @param {Array} videosArray - 現在表示中の動画オブジェクト配列
+ */
+function updateStats(videosArray) {
+  // １．フィルタ後の動画数
+  const videoCount = videosArray.length;
+  // ２．ユニークな魚 ID 数
+  const fishIds = new Set(videosArray.map(v => v.FishID));
+  const fishCount = fishIds.size;
+  // ３．ユニークなグループ ID 数
+  const groupIds = new Set(videosArray.map(v => v.GroupID));
+  const groupCount = groupIds.size;
+  // ４．画面反映
+  document.getElementById('stat-groups').textContent = groupCount;
+  document.getElementById('stat-fishes').textContent = fishCount;
+  document.getElementById('stat-videos').textContent = videoCount;
+}
 
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -241,6 +277,10 @@ async function initData() {
       }
   // 8) アイコンバーを描画（groupSelect の change でも同じ処理を呼び出します）
     renderIconBar("next");
+
+    const allVideos = VIDEOS.filter(v => v.GroupID !== OPENING_GROUP_ID);
+       // 初回に統計を描画
+    updateStats(allVideos);
       
   // ── 追加: Cボタンで該当セレクトをクリア ──
     document.querySelectorAll('.clear-btn').forEach(btn => {
@@ -945,7 +985,7 @@ async function nextGroup() {
         );
         updateFishInfo(fish);
         updateVideoMeta(video);
-        
+
       // repeatMode フラグで再生 or キューを振り分け
       if (repeatMode) {
       // グループ最初の動画を読み込んで再生

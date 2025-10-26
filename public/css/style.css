@@ -113,7 +113,7 @@ html, body {
   margin: 10px auto;
 }
 
-.video-meta {
+.video-meta,.stats {
   display: flex;
   justify-content: flex-start;
   gap: 1rem;
@@ -122,6 +122,13 @@ html, body {
   margin: 2px 0;
   padding: 0 1rem;
   flex-wrap: wrap;
+}
+
+.stat-item {
+  display: inline-flex;
+  align-items: center;  /* 必要に応じて */
+  gap: 0;               /* 数字とラベルの間はHTML上の全角コロン or 全角読点で調整 */
+  white-space: nowrap;
 }
 
 .player-overlay {
@@ -220,11 +227,22 @@ html, body {
   background: #dff0f7;
   border-top: 1px solid #ccc;
   gap: 4px;
+  scrollbar-width: auto;        /* Firefox 用 */
+  -ms-overflow-style: auto;     /* IE/Edge 用 */
 }
 
 .icon-bar::-webkit-scrollbar {
-  display: none;
+  height: 8px;                  /* スクロールバーの太さ */
 }
+
+.icon-bar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+/*.icon-bar::-webkit-scrollbar {
+  display: none;
+}*/
 
 .fish-icon {
   display: inline-flex;
@@ -329,13 +347,21 @@ html, body {
   /* 右パネルを上、左パネルを下に縦並び、隙間ナシ */
   .container {
     flex-direction: column-reverse;
+    display: flex;
+    align-items: stretch;   /* 子を幅いっぱいに */
     gap: 0;
+    padding: 0;
   }
   .left-panel,
   .right-panel {
     flex: none;
     width: 100%;
     margin: 0;
+      padding: 0 1rem;
+    box-sizing: border-box;
+    /* fixed height を打ち消し */
+    height: auto !important;
+    min-height: 0 !important;
   }
   #player {
     width: 100% !important;
@@ -363,10 +389,12 @@ html, body {
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     -webkit-overflow-scrolling: touch;
+    overflow-x: auto;                  /* 横スクロールを有効に */
   }
-  .icon-bar::-webkit-scrollbar {
+  /*.icon-bar::-webkit-scrollbar {
     display: none;
-  }
+  }*/
+
   .fish-icon img {
     width: 60px;
     height: 60px;
@@ -374,13 +402,30 @@ html, body {
   .fish-label {
     font-size: 0.6rem;
   }
-  .video-meta {
+  .video-meta,.stats{
+    margin-bottom: 0 !important;
+    margin-top:    0 !important;
     flex-direction: column;
     align-items: center;
     font-size: 0.7rem;
     line-height: 1.4;
-    gap: 0.25rem;
-    padding: 0.5rem 1rem;
+    margin: 0 !important;
+    gap: 0 !important;
+    padding-top:    0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* ↓ filter-panel.small の上下マージン＆パディングをゼロ */
+  .filter-panel.small {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* ↓ iconBar.icon-bar の上マージンをゼロ */
+  .iconBar.icon-bar {
+    margin-top: 0 !important;
   }
 }
 
@@ -393,22 +438,39 @@ html, body {
     flex-direction: column-reverse !important;
     gap: var(--gap) !important;
   }
-  html body #playerContainer {
-    height: 80vh !important;
-    width: 90vw !important;
-    max-width: none !important;
-    margin: 0 auto !important;
+
+  #playerContainer {
+    position: relative !important;
+    height: 100vh !important;                        /* 画面高いっぱい */
+    width: calc(100vh * 16 / 9) !important;           /* 横幅を自動計算 */
+    top: 0;                                           /* 画面上端に */
+    left: 50% !important;                             /* 中央寄せ */
+    transform: translateX(-50%) !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  html body #player {
+  /* 動画本体をコンテナいっぱいにクロップ */
+  #player {
     position: absolute !important;
     top: 0 !important;
-    left: 50% !important;
-    height: 100% !important;    /* 親の高さにピッタリ合わせる */
-    width: auto !important;      /* アスペクト維持 */
-    min-width: 100% !important;  /* 横幅必ず画面幅以上にする */
-    transform: translateX(-50%) !important; /* 水平中央に */
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
   }
+
+  /* オーバーレイPNGを縦横比維持でフィット */
+  .player-overlay {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: auto !important;
+    height: 100% !important;
+    transform: translate(-50%, -50%) !important;
+    object-fit: contain !important;
+  }
+
 
   html body .left-panel,
   html body .right-panel {

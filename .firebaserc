@@ -1,5 +1,26 @@
 {
   "projects": {
-    "default": "fishiconbook"
-  }
+    "default": "fishiconbook",
+    "fishpedias": "fishpedias"
+  },
+  "targets": {
+    "fishiconbook": {
+      "hosting": {
+        "fishiconbook": [
+          "fishiconbook"
+        ],
+        "fishpedias": [
+          "fishpedias"
+        ]
+      }
+    },
+    "fishpedias": {
+      "hosting": {
+        "fishpedias": [
+          "fishpedias"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

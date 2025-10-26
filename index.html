@@ -59,23 +59,30 @@
           </select>
            <button type="button" class="clear-btn" data-target="placeSelect">C</button>
         </span>
-        <span class="select-clear-wrapper">
-          <select id="groupSelect">
-           <option value="">仲間を選択</option>
-          </select>
-           <button type="button" class="clear-btn" data-target="groupSelect">C</button>
-        </span>
-      </div>
-     </div>
+        <div class="group-counter-wrapper">
+          <span class="select-clear-wrapper"></span>
+            <select id="groupSelect">
+             <option value="">仲間を選択</option>
+            </select>
+             <button type="button" class="clear-btn" data-target="groupSelect">C</button>
+          </span>
+          <!-- アクセスカウンター表示 -->
+          <span class="counter-inline">
+           <small>　アクセス数：<span id="visitCount">…</span></small>
+          </span>
+        </div>
     </div>
+    </div>
+  </div>
   <!-- ====== BEGIN: Audio Selection Modal ====== -->
   <div id="audioModal" class="modal" style="display:none;">
     <div class="modal-content">
-      <h2>ようこそ FishPedia へ！</h2>
-      <p>動画の音声をオンにしますか？</p>
+      <h2>Welcome to FishPedia!</h2>
+      <p>動画の音声をオンにしますか？（Play video with sound?）</p>
       <p>オン/オフは🔊のクリックでもできます！</p>
-      <button id="btnAudioOn">オンで開始</button>
-      <button id="btnAudioOff">無音で続ける</button>
+      <p>（You can toggle the sound on/off with 🔊 any time.）</p>
+      <button id="btnAudioOn">オン（ON）で開始</button>
+      <button id="btnAudioOff">無音（OFF）で続ける</button>
     </div>
   </div>
   <!-- ====== END: Audio Selection Modal ====== -->
@@ -97,7 +104,7 @@
     <input type="checkbox" id="repeatToggle" class="toggle-button" checked />
   </label>
 
-  <button id="muteBtn" aria-label="ミュート切替">🔇</button>
+  <button id="muteBtn" aria-label="ミュート切替">🔊</button>
   <button onclick="prevGroup()">前Gr</button>
   <button onclick="prevVideo()">前へ</button>
   <button onclick="pauseVideo()">ポーズ</button>
@@ -125,12 +132,16 @@
  </div>
 </div>
 
+
+
 </body>
 
 <script src="./js/fishesData.js"></script>
 <script src="./js/videosData.js"></script> 
 <script src="./js/groupsData.js"></script>
 <script src="./js/placesData.js"></script>
+<!-- Firestore アクセスカウンター -->
+<script type="module" src="./js/counter.js"></script>
 
 <script>
 const MAX_GROUP = 56;
@@ -173,12 +184,12 @@ let currentLetter = "";
 const muteBtn = document.getElementById("muteBtn");
 muteBtn.addEventListener("click", () => {
   if (!window.ytPlayer) return;
-  if (muteBtn.textContent === "🔇") {
+  if (muteBtn.textContent === "🔊") {
     window.ytPlayer.unMute();
-    muteBtn.textContent = "🔊";
+    muteBtn.textContent = "🔇";
   } else {
     window.ytPlayer.mute();
-    muteBtn.textContent = "🔇";
+    muteBtn.textContent = "🔊";
   }
 });
 
@@ -400,7 +411,7 @@ function populateGroupSelect(allGroups) {
   // 1) セレクト要素を取得
   const sel = document.getElementById('groupSelect');
   // 2) 既存の<option>をクリアして、デフォルト「全グループ」を追加
-  sel.innerHTML = '<option value="">全グループ</option>';
+  sel.innerHTML = '<option value="">全グループ（Group）</option>';
   // ── ① 静的データから「動画のある」グループID集合を作る
   const availableGroupIds = new Set(VIDEOS.map(v => Number(v.GroupID)));
   // 「不明」と「ダイジェスト」を切り出す
@@ -475,7 +486,7 @@ function populateGroupSelect(allGroups) {
   
 function populatePlaceSelect(list) {
   const sel = document.getElementById('placeSelect');
-  sel.innerHTML = '<option value="">全場所</option>';
+  sel.innerHTML = '<option value="">全場所（Place）</option>';
   list.forEach(p => {
     const opt = document.createElement('option');
       opt.value = p;
@@ -499,7 +510,7 @@ function populateFishSelect(list) {
   // 先頭にダミーオプション（必要なら）
   const placeholder = document.createElement('option');
   placeholder.value = '';
-  placeholder.textContent = '— 魚を選択 —';
+  placeholder.textContent = '— 魚（Fish）を選択 —';
   sel.appendChild(placeholder);
       
   list.forEach(f => {
