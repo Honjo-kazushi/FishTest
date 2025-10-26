@@ -77,11 +77,12 @@
   <!-- ====== BEGIN: Audio Selection Modal ====== -->
   <div id="audioModal" class="modal" style="display:none;">
     <div class="modal-content">
-      <h2>ようこそ FishPedia へ！</h2>
-      <p>動画の音声をオンにしますか？</p>
+      <h2>Welcome to FishPedia!</h2>
+      <p>動画の音声をオンにしますか？（Play video with sound?）</p>
       <p>オン/オフは🔊のクリックでもできます！</p>
-      <button id="btnAudioOn">オンで開始</button>
-      <button id="btnAudioOff">無音で続ける</button>
+      <p>（You can toggle the sound on/off with 🔊 any time.）</p>
+      <button id="btnAudioOn">オン（ON）で開始</button>
+      <button id="btnAudioOff">無音（OFF）で続ける</button>
     </div>
   </div>
   <!-- ====== END: Audio Selection Modal ====== -->
@@ -410,7 +411,7 @@ function populateGroupSelect(allGroups) {
   // 1) セレクト要素を取得
   const sel = document.getElementById('groupSelect');
   // 2) 既存の<option>をクリアして、デフォルト「全グループ」を追加
-  sel.innerHTML = '<option value="">全グループ</option>';
+  sel.innerHTML = '<option value="">全グループ（Group）</option>';
   // ── ① 静的データから「動画のある」グループID集合を作る
   const availableGroupIds = new Set(VIDEOS.map(v => Number(v.GroupID)));
   // 「不明」と「ダイジェスト」を切り出す
@@ -485,7 +486,7 @@ function populateGroupSelect(allGroups) {
   
 function populatePlaceSelect(list) {
   const sel = document.getElementById('placeSelect');
-  sel.innerHTML = '<option value="">全場所</option>';
+  sel.innerHTML = '<option value="">全場所（Place）</option>';
   list.forEach(p => {
     const opt = document.createElement('option');
       opt.value = p;
@@ -509,7 +510,7 @@ function populateFishSelect(list) {
   // 先頭にダミーオプション（必要なら）
   const placeholder = document.createElement('option');
   placeholder.value = '';
-  placeholder.textContent = '— 魚を選択 —';
+  placeholder.textContent = '— 魚（Fish）を選択 —';
   sel.appendChild(placeholder);
       
   list.forEach(f => {
