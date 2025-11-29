@@ -1,5 +1,5 @@
 /* Generated at 2025-09-23T00:51:15.070Z */
-const VIDEOS = [
+window.VIDEOS = [
   {
     "GroupID": 1,
     "FishID": 8,
@@ -9012,7 +9012,7 @@ const VIDEOS = [
   }
 ];
 
-const VIDEOS_BY_FISH = {
+window.VIDEOS_BY_FISH = {
   "1": [
     {
       "GroupID": 42,
