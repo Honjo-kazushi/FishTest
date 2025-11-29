@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ビデオ投稿パネル</title>
+</head>
+<body>
+  <!-- React がここにマウントします -->
+  <div id="root"></div>
+
+  <!-- 既存の魚図鑑用グローバル JS -->
+  <script src="/js/groupsData.js"></script>
+  <script src="/js/fishesData.js"></script>
+  <script src="/js/placesData.js"></script>
+
+  <!-- Vite 開発・本番で同じバンドルを読む 
+       panel.html は手動でこの <script> を書きます -->
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

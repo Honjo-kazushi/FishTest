@@ -1,5 +1,5 @@
 // placesData.js
-const PLACES = [
+window.PLACES = [
   "羽尾",
   "田後",
   "日御碕",

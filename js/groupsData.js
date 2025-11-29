@@ -1,5 +1,5 @@
 // groupsData.js
-const GROUPS = [
+window.GROUPS = [
   { groupId: 0,  nameJp: "他の分類" },
   { groupId: 1,  nameJp: "スズメダイ" },
   { groupId: 2,  nameJp: "テンジクダイ" },
