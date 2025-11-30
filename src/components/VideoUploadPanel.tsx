@@ -354,7 +354,7 @@ export default function VideoUploadPanel() {
             onClick={handleRegister}
             className="bg-blue-600 text-white rounded px-4 py-2"
           >
-            　　登録　＆　アップロード
+            　登録　＆　アップロード
           </button>
         </div>
       </div>
