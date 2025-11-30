@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
+declare global {
+  interface Window {
+    PLACES: string[];
+    GROUPS: any[];
+    FISHES: any[];
+    VIDEOS: any[];
+    VIDEOS_BY_FISH: Record<string, any[]>;
+  }
+}
+
 
 export default function VideoUploadPanel() {
   const [fileName, setFileName] = useState('');
@@ -25,6 +35,129 @@ export default function VideoUploadPanel() {
   const [isDeleteChecked, setIsDeleteChecked] = useState(false);
   const [showDeleteSwitch, setShowDeleteSwitch] = useState(false); // パターン0時のみ有効化
   const [iconInputKey, setIconInputKey] = useState(0); // ← input初期化用のキー
+
+  const [selectedPattern, setSelectedPattern] = useState(1);
+  const [selectedGroupId, setSelectedGroupId] = useState(42);
+  const [selectedFishId, setSelectedFishId] = useState(123);
+  // const [selectedYear, setSelectedYear] = useState(2024);
+  // const [selectedPlace, setSelectedPlace] = useState("柏島");
+  const [videoFilename, setVideoFilename] = useState("柏島2024アカオビハナダイ_01.mp4");
+  const [videoFilePath, setVideoFilePath] = useState("");
+  const [iconSourcePath, setIconSourcePath] = useState("");
+  const [fishNameJp, setFishNameJp] = useState("アカオビハナダイ");
+  const [fishNameEn, setFishNameEn] = useState("Anthias smithvanizi");
+  // const [fishFeature, setFishFeature] = useState("");
+  const [groupNameJp, setGroupNameJp] = useState("ハナダイ");
+  // const [isDeleteChecked, setIsDeleteChecked] = useState(false);
+  const [pattern, setPattern] = useState<number>(0); // 初期値 0（上書き/削除）
+
+
+  function buildRequestJson(pattern: number): any {
+  const request: any = {
+    pattern,
+  };
+
+  // Pattern 0〜3共通：VIDEOS, VIDEOS_BY_FISH
+  request.VIDEOS = [buildVideoEntry()];
+  request.VIDEOS_BY_FISH = {
+    [selectedFishId]: [buildVideoEntry()]
+  };
+
+  // Pattern 0のみ: isDelete フラグ
+  if (pattern === 0) {
+    request.isDelete = isDeleteChecked;
+  }
+
+  // Pattern 1〜3：動画ファイルのパスを追加
+  if (pattern >= 1 && videoFilePath) {
+    request.files = {
+      videoFilePath: videoFilePath
+    };
+  }
+
+  // Pattern 2〜3：魚情報＋アイコン元画像のパス
+  if (pattern >= 2) {
+    request.FISHES = [buildFishEntry()];
+    if (!request.files) request.files = {};
+    request.files.iconSourcePath = iconSourcePath;
+  }
+
+  // Pattern 3のみ：グループ情報
+  if (pattern === 3) {
+    request.GROUPS = [buildGroupEntry()];
+  }
+
+  // Pattern 1〜3で、場所が新規ならPLACESに追加
+  if (pattern > 0 && isNewPlace(selectedPlace)) {
+    request.PLACES = [selectedPlace];
+  }
+
+  return request;
+}
+
+function buildVideoEntry(): any {
+  return {
+    GroupID: selectedGroupId,
+    FishID: selectedFishId,
+    YouTubeURL: "",   // 初期は空
+    ytid: "",
+    撮影年: parseInt(year),
+    撮影場所: place,
+    動画ファイル名: videoFilename,
+    label: `${selectedPlace}${selectedYear}`
+  };
+}
+
+function buildFishEntry(): any {
+  return {
+    FishID: selectedFishId,
+    GroupID: selectedGroupId,
+    Name: fishNameJp,
+    英名: fishNameEn,
+    特徴: fishFeature,
+    IconURL: "",
+    IconInactiveURL: "",
+    魚の仲間: groupNameJp
+  };
+}
+
+function buildGroupEntry(): any {
+  return {
+    groupId: selectedGroupId,
+    nameJp: groupNameJp
+  };
+}
+
+function isNewPlace(place: string): boolean {
+  return !window.PLACES.includes(place);
+}
+
+function saveRequestJsonToFile() {
+  const jsonData = buildRequestJson(selectedPattern);
+  const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "request.json";
+  a.click();
+}
+
+function handleSaveRequestJson() {
+  const requestData = buildRequestJson(pattern); // pattern: 0〜3 の状態から取得
+
+  const jsonString = JSON.stringify(requestData, null, 2);
+  const blob = new Blob([jsonString], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "request.json"; // ダウンロードファイル名（上書きOK）
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
 
   useEffect(() => {
     const loadGlobals = () => {
@@ -181,6 +314,9 @@ export default function VideoUploadPanel() {
   if (!proceed) return;
 
   alert('登録処理を開始します（※まだ実装中）');
+
+  handleSaveRequestJson(); // ← request.json を自動生成・ダウンロード開始
+
 };
 
 
